@@ -601,6 +601,7 @@ def _row_coverage_conclusive(row: Mapping[str, Any]) -> bool:
     if classification in {
         "documented_unavailable",
         "explicit_context_limit_rejection",
+        "matched_control_rejection",
         "rejected_or_unsupported",
     }:
         return True
@@ -613,6 +614,7 @@ def _row_evidence_backed_unsupported(row: Mapping[str, Any]) -> bool:
         return classification in {
             "rejected_or_unsupported",
             "documented_unavailable",
+            "matched_control_rejection",
         }
     return False
 
@@ -1045,6 +1047,7 @@ def normalize_request(
         "response_hash": _text(row.get("response_hash") or row.get("response_sha256")),
         "coverage_tags": list(_coverage_tags(row)),
         "coverage_classification": _text(row.get("coverage_classification")),
+        "capability_status": _text(row.get("capability_status")),
         "coverage_conclusive": (
             row.get("coverage_conclusive")
             if isinstance(row.get("coverage_conclusive"), bool)
@@ -1357,6 +1360,7 @@ def _normalize_plan_row(row: Mapping[str, Any], *, source_id: str) -> dict[str, 
         "task_id": _text(
             task.get("task_id") or row.get("task_id") or row.get("probe_id")
         ),
+        "probe_id": _text(row.get("probe_id")),
         "planned_attempt_count": 1,
         "context_bucket": _text(
             task.get("context_bucket")
@@ -4723,6 +4727,8 @@ def build_coverage(
             ),
             "workload": plan["workload"],
             "cell_or_epoch_id": plan["cell_id"],
+            "probe_id": plan.get("probe_id"),
+            "task_id": plan.get("task_id"),
             "planned_attempt_count": planned,
             "observed_attempt_count": len(rows),
             "conclusive_attempt_count": sum(
@@ -5071,6 +5077,74 @@ def build_coverage(
             replacement["supersession_status"] = (
                 f"not_applied_source_status_{target.get('status')}"
             )
+
+    # A matched-control closure row is a stronger measurement of the same exact
+    # capability state than the old unpaired 4xx/timeout row. Preserve the old
+    # row, but do not let it poison endpoint-level experimental coverage after
+    # the exact state has been rerun conclusively.
+    matched_replacements = [
+        row
+        for row in ledger
+        if str(row.get("source_id", "")).startswith("do-matched-closure-")
+        and row.get("status") in {"completed", "unsupported"}
+        and row.get("probe_id") is not None
+    ]
+    for replacement in matched_replacements:
+        for target in ledger:
+            if target is replacement or target.get("status") != "inconclusive":
+                continue
+            if str(target.get("source_id", "")).startswith("do-matched-closure-"):
+                continue
+            if (
+                target.get("endpoint_id") == replacement.get("endpoint_id")
+                and target.get("coverage_dimension")
+                == replacement.get("coverage_dimension")
+                and target.get("probe_id") == replacement.get("probe_id")
+            ):
+                target.update(
+                    {
+                        "status": "superseded",
+                        "superseded_by_source_id": replacement.get("source_id"),
+                        "superseded_by_cell_id": replacement.get("cell_or_epoch_id"),
+                        "supersession_policy": (
+                            "exact_endpoint_dimension_probe_matched_control"
+                        ),
+                    }
+                )
+
+    # Repeated soak attempts are replicates, not an all-or-nothing chain. Once
+    # one complete two-minute cell exists for the same endpoint, workload and
+    # coverage dimension, a transport-gated replicate remains visible as a
+    # failure observation but no longer means the experiment was never done.
+    soak_groups: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in ledger:
+        if row.get("source_kind") != "direct_soak":
+            continue
+        soak_groups[
+            (
+                str(row.get("endpoint_id")),
+                str(row.get("coverage_dimension")),
+                str(row.get("workload")),
+            )
+        ].append(row)
+    for members in soak_groups.values():
+        completed = [row for row in members if row.get("status") == "completed"]
+        if not completed:
+            continue
+        for row in members:
+            if row.get("status") == "inconclusive":
+                row.update(
+                    {
+                        "status": "replicate_failure_observed",
+                        "completed_replicate_source_ids": sorted(
+                            {str(item.get("source_id")) for item in completed}
+                        ),
+                        "coverage_policy": (
+                            "complete_replication_exists; retain failed replicate "
+                            "without relabelling it successful"
+                        ),
+                    }
+                )
     matrix: list[dict[str, Any]] = []
     for endpoint in EXPECTED_ENDPOINT_IDS:
         for dimension in REQUIRED_COVERAGE_DIMENSIONS:

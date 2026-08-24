@@ -780,6 +780,65 @@ def test_quality_coverage_requires_request_level_scores() -> None:
     assert matrix_by_dimension["quality_near_saturation"] == "inconclusive"
 
 
+def test_exact_matched_control_retry_supersedes_old_unpaired_probe() -> None:
+    endpoint = DEEPSEEK_ENDPOINT_ID
+    plans = [
+        {
+            "source_kind": "direct_breadth",
+            "source_id": "do-direct-capability-20260823",
+            "endpoint_id": endpoint,
+            "cell_id": "old",
+            "probe_id": "temperature--0.01",
+            "task_id": "cap-temperature--0.01",
+            "workload": "parameter_validation",
+            "shape": "capability_envelope",
+            "planned_attempt_count": 1,
+        },
+        {
+            "source_kind": "direct_breadth",
+            "source_id": "do-matched-closure-r2",
+            "endpoint_id": endpoint,
+            "cell_id": "new",
+            "probe_id": "temperature--0.01",
+            "task_id": "cap-temperature--0.01",
+            "workload": "parameter_validation",
+            "shape": "matched_control_closure",
+            "planned_attempt_count": 1,
+        },
+    ]
+    requests = [
+        {
+            "source_kind": "direct_breadth",
+            "source_id": plans[0]["source_id"],
+            "endpoint_id": endpoint,
+            "cell_id": "old",
+            "coverage_conclusive": False,
+            "transport_success": False,
+        },
+        {
+            "source_kind": "direct_breadth",
+            "source_id": plans[1]["source_id"],
+            "endpoint_id": endpoint,
+            "cell_id": "new",
+            "coverage_conclusive": True,
+            "coverage_classification": "matched_control_rejection",
+            "transport_success": False,
+        },
+    ]
+    ledger, matrix, _ = build_coverage(plans, requests, [])
+    old = next(row for row in ledger if row["cell_or_epoch_id"] == "old")
+    new = next(row for row in ledger if row["cell_or_epoch_id"] == "new")
+    assert old["status"] == "superseded"
+    assert new["status"] == "unsupported"
+    status = next(
+        row["status"]
+        for row in matrix
+        if row["endpoint_id"] == endpoint
+        and row["coverage_dimension"] == "parameter_validation"
+    )
+    assert status == "unsupported"
+
+
 def test_zero_quality_score_is_a_scored_failure_not_missing_evidence() -> None:
     raw = _breadth_record(cell_id="quality-zero", family="short_short")
     raw.update(
