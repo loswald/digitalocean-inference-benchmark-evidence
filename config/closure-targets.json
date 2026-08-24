@@ -1,0 +1,1528 @@
+{
+  "capability_targets": [
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-00"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-01"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-04"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-05"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-08"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-09"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-10"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-12"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-13"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-14"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-15"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-17"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-18"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-19"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-20"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-21"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-22"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-23"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-24"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-25"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-26"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-27"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-28"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-29"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-30"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-33"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-34"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-35"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-36"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-38"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-39"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-1"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-2"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-3"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-6"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "parallel-tool-calls-false"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "parallel-tool-calls-true"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "penalty-boundaries-0"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "penalty-boundaries-3"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "penalty-boundaries-4"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "penalty-boundaries-6"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "temperature--0.01"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "temperature-2.01"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "tools-required"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "top-logprobs--1"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "top-logprobs-21"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "top-p--0.01"
+    },
+    {
+      "endpoint_id": "arcee-trinity-large-thinking",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "top-p-1.01"
+    },
+    {
+      "endpoint_id": "deepseek-v4-flash-0731",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "deepseek-v4-flash-0731",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "max-tokens-high"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-08"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-15"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-19"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-20"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-23"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "gemma-4-31B-it",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-00"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-01"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-02"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-03"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-04"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-05"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-06"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-07"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-08"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-09"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-10"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-11"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-12"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-13"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-14"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-15"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-16"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-17"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-18"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-19"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-20"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-21"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-22"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-23"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-24"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-25"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-26"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-27"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-28"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-29"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-30"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-31"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-33"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-34"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-35"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-36"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-37"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-38"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-39"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-0"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-1"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-2"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-3"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-6"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "tool-argument-bytes-32768"
+    },
+    {
+      "endpoint_id": "glm-5.2",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "tool-argument-bytes-8192"
+    },
+    {
+      "endpoint_id": "kimi-k3",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-1"
+    },
+    {
+      "endpoint_id": "kimi-k3",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-2"
+    },
+    {
+      "endpoint_id": "kimi-k3",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-3"
+    },
+    {
+      "endpoint_id": "kimi-k3",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "kimi-k3",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "kimi-k3",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-6"
+    },
+    {
+      "endpoint_id": "kimi-k3",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "vision-malformed-data-uri"
+    },
+    {
+      "endpoint_id": "mimo-v2.5-pro",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-18"
+    },
+    {
+      "endpoint_id": "mimo-v2.5-pro",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "mimo-v2.5-pro",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-39"
+    },
+    {
+      "endpoint_id": "mimo-v2.5-pro",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "mimo-v2.5-pro",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "mimo-v2.5-pro",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "max-tokens-high"
+    },
+    {
+      "endpoint_id": "mimo-v2.5-pro",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "tool-malformed-invalid_json_schema_type"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-06"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-16"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-29"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-37"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-38"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-1"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-2"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-3"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "minimax-m2.5",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-6"
+    },
+    {
+      "endpoint_id": "nemotron-3-ultra-550b",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "nemotron-3-ultra-550b",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "nemotron-3-ultra-550b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "nemotron-3-ultra-550b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "max-tokens-high"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-06"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-15"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-16"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-23"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-24"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "424",
+      "probe_id": "cap-pairwise-28"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-29"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-37"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-38"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-1"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-2"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-3"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-6"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "parallel-tool-calls-false"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "parallel-tool-calls-true"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "tools-named"
+    },
+    {
+      "endpoint_id": "nvidia-nemotron-3-super-120b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "tools-required"
+    },
+    {
+      "endpoint_id": "openai-gpt-oss-120b",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-08"
+    },
+    {
+      "endpoint_id": "openai-gpt-oss-120b",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-18"
+    },
+    {
+      "endpoint_id": "openai-gpt-oss-120b",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-23"
+    },
+    {
+      "endpoint_id": "openai-gpt-oss-120b",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "openai-gpt-oss-120b",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "openai-gpt-oss-120b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-06"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-15"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-16"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-23"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-24"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "cap-pairwise-28"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-29"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-37"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "cap-pairwise-38"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-1"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-2"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-3"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-6"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "max-tokens-high"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "parallel-tool-calls-false"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "parallel-tool-calls-true"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "tools-named"
+    },
+    {
+      "endpoint_id": "qwen3.5-397b-a17b",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "tools-required"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-15"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "cap-pairwise-32"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "extended-parameters-4"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "extended-parameters-5"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "tool-argument-bytes-32768"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "timed_out",
+      "prior_http_status": "",
+      "probe_id": "tool-argument-bytes-8192"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "provider_error",
+      "prior_http_status": "500",
+      "probe_id": "tool-malformed-invalid_json_schema_type"
+    },
+    {
+      "endpoint_id": "qwen3.8-max",
+      "prior_classification": "client_error_inconclusive",
+      "prior_http_status": "400",
+      "probe_id": "vision-malformed-data-uri"
+    }
+  ],
+  "identity_sha256": "ea23d479e3fac04183eca816e594c7b8bd9614efab299f391dcf46404b4af644",
+  "schema_version": "do_closure_targets_v1",
+  "source_coverage_sha256": "0d0cb8659af0cfd0d8e079e801053fbd90ef5d44f7fd617a196d20157823190f",
+  "source_requests_sha256": "a3298affa3fb24f74f589c77030114ddf718e36274d509939bd79a025f25193a",
+  "unresolved_endpoint_dimensions": [
+    {
+      "coverage_dimension": "input_context",
+      "endpoint_id": "gemma-4-31B-it"
+    },
+    {
+      "coverage_dimension": "input_context",
+      "endpoint_id": "nemotron-3-ultra-550b"
+    },
+    {
+      "coverage_dimension": "input_context",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "input_context",
+      "endpoint_id": "openai-gpt-oss-120b"
+    },
+    {
+      "coverage_dimension": "input_context",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "arcee-trinity-large-thinking"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "deepseek-v4-flash-0731"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "gemma-4-31B-it"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "glm-5.2"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "nemotron-3-ultra-550b"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "openai-gpt-oss-120b"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "low_load_baseline",
+      "endpoint_id": "qwen3.8-max"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "arcee-trinity-large-thinking"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "deepseek-v4-flash-0731"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "gemma-4-31B-it"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "glm-5.2"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "nemotron-3-ultra-550b"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "openai-gpt-oss-120b"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "output_length",
+      "endpoint_id": "qwen3.8-max"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "arcee-trinity-large-thinking"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "deepseek-v4-flash-0731"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "gemma-4-31B-it"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "glm-5.2"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "nemotron-3-ultra-550b"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "openai-gpt-oss-120b"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "parameter_interactions",
+      "endpoint_id": "qwen3.8-max"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "arcee-trinity-large-thinking"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "deepseek-v4-flash-0731"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "gemma-4-31B-it"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "glm-5.2"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "nemotron-3-ultra-550b"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "openai-gpt-oss-120b"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "parameter_validation",
+      "endpoint_id": "qwen3.8-max"
+    },
+    {
+      "coverage_dimension": "post_overload_recovery",
+      "endpoint_id": "deepseek-v4-flash-0731"
+    },
+    {
+      "coverage_dimension": "post_overload_recovery",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "post_overload_recovery",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "post_overload_recovery",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "post_overload_recovery",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "post_overload_recovery",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "quality_low_load",
+      "endpoint_id": "deepseek-v4-flash-0731"
+    },
+    {
+      "coverage_dimension": "quality_low_load",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "quality_low_load",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "quality_low_load",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "quality_low_load",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "quality_low_load",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "quality_near_saturation",
+      "endpoint_id": "deepseek-v4-flash-0731"
+    },
+    {
+      "coverage_dimension": "quality_near_saturation",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "quality_near_saturation",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "quality_near_saturation",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "quality_near_saturation",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "quality_near_saturation",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "structured_output",
+      "endpoint_id": "arcee-trinity-large-thinking"
+    },
+    {
+      "coverage_dimension": "structured_output",
+      "endpoint_id": "gemma-4-31B-it"
+    },
+    {
+      "coverage_dimension": "structured_output",
+      "endpoint_id": "glm-5.2"
+    },
+    {
+      "coverage_dimension": "structured_output",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "structured_output",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "structured_output",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "arcee-trinity-large-thinking"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "gemma-4-31B-it"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "glm-5.2"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "mimo-v2.5-pro"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "minimax-m2.5"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "nvidia-nemotron-3-super-120b"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "qwen3.5-397b-a17b"
+    },
+    {
+      "coverage_dimension": "tool_calling",
+      "endpoint_id": "qwen3.8-max"
+    },
+    {
+      "coverage_dimension": "vision",
+      "endpoint_id": "kimi-k3"
+    },
+    {
+      "coverage_dimension": "vision",
+      "endpoint_id": "qwen3.8-max"
+    }
+  ]
+}
