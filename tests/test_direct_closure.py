@@ -7,6 +7,7 @@ from pathlib import Path
 from do_benchmark.direct_closure import (
     ClosureConfig,
     MatchedClosureCampaign,
+    _failure_metrics,
     build_cells,
 )
 
@@ -113,3 +114,13 @@ def test_failed_control_keeps_probe_inconclusive(tmp_path: Path) -> None:
     )
     assert row["coverage_conclusive"] is False
     assert row["coverage_classification"] == "matched_control_inconclusive"
+
+
+class _AccessDenied(RuntimeError):
+    status_code = 403
+    body = "not persisted"
+
+
+def test_access_denial_is_not_parameter_rejection() -> None:
+    row = _failure_metrics(_AccessDenied(), 0.1)
+    assert row["status"] == "access_denied"

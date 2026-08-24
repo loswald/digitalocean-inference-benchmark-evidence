@@ -304,6 +304,8 @@ def _failure_metrics(error: BaseException, elapsed: float) -> dict[str, Any]:
         classification = "rate_limited"
     elif status == 402:
         classification = "account_blocked_402"
+    elif status in {401, 403}:
+        classification = "access_denied"
     elif isinstance(status, int) and 400 <= status < 500:
         classification = "client_rejection"
     elif isinstance(status, int) and status >= 500:
@@ -403,6 +405,9 @@ class MatchedClosureCampaign:
             "prior_cost_usd": self.config.prior_cost_usd,
             "max_cost_usd": self.config.max_cost_usd,
             "max_attempts": self.config.max_attempts,
+            "runner_source_sha256": hashlib.sha256(
+                Path(__file__).read_bytes()
+            ).hexdigest(),
             "planned_worst_case_reservation_usd": (
                 self.planned_worst_case_reservation_usd
             ),
@@ -590,7 +595,15 @@ class MatchedClosureCampaign:
             capability_status = "inconclusive_provider_failure"
         elif cell.kind == "realized_output" and exhausted:
             classification = f"realized_output_{probe_status}"
-            conclusive = probe_status not in {"rate_limited", "unknown"}
+            conclusive = probe_status not in {
+                "access_denied",
+                "account_blocked_402",
+                "provider_error",
+                "rate_limited",
+                "timeout",
+                "transport_error",
+                "unknown",
+            }
             capability_status = classification
         else:
             classification = "matched_control_inconclusive"
