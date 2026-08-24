@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digitalocean-inference-endpoint-benchmark"
+version = "0.2.0"
+description = "Direct, request-level benchmark harness for DigitalOcean Serverless Inference"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+  "httpx>=0.27,<1",
+  "matplotlib>=3.8,<4",
+  "pillow>=10,<13",
+  "reportlab>=4,<5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pypdf>=5,<7", "ruff>=0.9,<1"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.setuptools.packages.find]
+include = ["do_benchmark*"]
+
+[tool.setuptools.package-data]
+do_benchmark = ["data/*.jsonl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

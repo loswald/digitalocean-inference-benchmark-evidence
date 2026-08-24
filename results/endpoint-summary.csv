@@ -1,0 +1,13 @@
+aggregate_policy,bootstrap_replicates_requested,endpoint_id,epoch_count,error_count,estimated_cost_usd,heterogeneous_metrics_omitted,rate_limit_count,request_count,scientific_success_count,server_error_count,source_kind_count,timeout_count,transport_success_count,workload_cell_count
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,arcee-trinity-large-thinking,116,116,9.4860529,True,0,3210,316,0,4,0,3094,34
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,deepseek-v4-flash-0731,136,27,4.295549608,True,0,9775,9747,0,4,4,9748,32
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,gemma-4-31B-it,112,83,9.932781239999999,True,29,1063,785,0,4,34,980,34
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,glm-5.2,114,111,8.119277,True,0,1028,874,0,4,3,917,35
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,kimi-k3,117,96,56.64027015,True,13,1957,1832,0,4,0,1861,32
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,minimax-m2.5,155,652,3.977691825,True,578,6623,5970,0,4,4,5971,32
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,mimo-v2.5-pro,115,29,6.1388071,True,0,1959,1800,8,4,3,1930,32
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,nemotron-3-ultra-550b,122,24,9.4975916,True,0,1121,1004,0,4,2,1097,31
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,nvidia-nemotron-3-super-120b,100,341,29.641939269999998,True,192,764,371,58,4,6,423,34
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,openai-gpt-oss-120b,144,35,2.5760226,True,0,9014,8838,0,4,6,8979,32
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,qwen3.5-397b-a17b,105,1455,11.532420663,True,1278,3678,2222,43,4,49,2223,34
+"counts_and_cost_only; RPM, TPM, latency, decode, and quality remain in matched workload cells",10000,qwen3.8-max,117,29,37.304344,True,0,1403,1220,4,4,8,1374,35

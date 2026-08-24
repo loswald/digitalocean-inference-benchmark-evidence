@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/digitalocean-inference-endpoint-benchmark/endpoint-freeze.schema.json",
+  "title": "DigitalOcean endpoint freeze v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "fetched_at_utc", "source_url", "source_sha256", "api_version", "server_region", "server_region_note", "documentation_sources", "endpoints"],
+  "properties": {
+    "schema_version": {"const": "digitalocean_endpoint_freeze_v2"},
+    "fetched_at_utc": {"type": "string", "format": "date-time"},
+    "source_url": {"type": "string", "format": "uri"},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "api_version": {"const": "v1"},
+    "server_region": {"type": ["string", "null"]},
+    "server_region_note": {"type": "string", "minLength": 1},
+    "documentation_sources": {"type": "object"},
+    "endpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["model_id", "owned_by", "api_surface", "catalog_created_unix", "catalog_context_window", "catalog_max_output_tokens", "input_usd_per_million", "output_usd_per_million", "context_window", "max_output_tokens", "provider", "documented_capabilities"],
+        "properties": {
+          "model_id": {"type": "string", "minLength": 1},
+          "owned_by": {"type": "string", "minLength": 1},
+          "api_surface": {"enum": ["chat_completions", "embeddings", "reranking", "text_to_speech", "image_generation", "video_generation", "router"]},
+          "catalog_created_unix": {"type": ["integer", "null"]},
+          "catalog_context_window": {"type": ["integer", "null"]},
+          "catalog_max_output_tokens": {"type": ["integer", "null"]},
+          "input_usd_per_million": {"type": ["number", "string", "null"]},
+          "output_usd_per_million": {"type": ["number", "string", "null"]},
+          "context_window": {"type": ["integer", "null"], "minimum": 1},
+          "max_output_tokens": {"type": ["integer", "null"], "minimum": 1},
+          "provider": {"type": ["string", "null"]},
+          "documented_capabilities": {"type": ["object", "null"]}
+        }
+      }
+    }
+  }
+}

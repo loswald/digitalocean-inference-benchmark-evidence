@@ -1,0 +1,29 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Private preflight material and local runtime state. Public evidence belongs
+# only in the allow-listed normalized files under results/.
+tmp/
+runtime/
+*.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# The canonical public analysis is committed as results/analysis.json.gz.
+# Decompression is a local reproduction step; never commit the 105 MB copy.
+/results/analysis.json
+
+# Credentials must never be added, even under a different local filename.
+.env
+.env.*
+*secret*
+*credential*
+*api-key*

@@ -1,0 +1,73 @@
+boundary_censoring,boundary_exact,boundary_interval_censored,boundary_monotonic,context_window_anchor_source,context_window_probe_anchor_value,dimension,documentation_status,documented_value,endpoint_id,finding,maximum_accepted_combined_target_tokens,maximum_accepted_estimated_input_tokens,maximum_accepted_input_tokens,maximum_accepted_requested_output_target,maximum_functionally_valid_combined_target_tokens,maximum_functionally_valid_input_tokens,maximum_realized_output_tokens,minimum_rejected_estimated_combined_target_tokens,minimum_rejected_estimated_input_tokens,minimum_rejected_requested_output_target,observed_value,requested_output_target,requested_output_target_unit
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,128000,arcee-trinity-large-thinking,accepted_and_retrieval_valid_through_174988,,250000,174988,,,174988,,,,,174988,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,128000,arcee-trinity-large-thinking,transport_accepted_but_retrieval_not_verified,132320,124160,128224,,,,,,,,132320,4096,tokens
+,,,,,,output limit,,32000,arcee-trinity-large-thinking,realized_generation_observed,,,,32001,,,847,,,64,847,,words
+,,,,,,vision,,False,arcee-trinity-large-thinking,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,,arcee-trinity-large-thinking,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,,arcee-trinity-large-thinking,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,1048576,deepseek-v4-flash-0731,accepted_and_retrieval_valid_through_2722,,1038090,1047013,,,2722,,,,,1047013,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,1048576,deepseek-v4-flash-0731,transport_accepted_but_retrieval_not_verified,1044925,1042383,1040829,,,,,,,,1044925,4096,tokens
+,,,,,,output limit,,1048576,deepseek-v4-flash-0731,realized_generation_observed,,,,4096,,,10020,,,1048577,10020,,words
+,,,,,,vision,,False,deepseek-v4-flash-0731,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,,deepseek-v4-flash-0731,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,,deepseek-v4-flash-0731,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,256000,gemma-4-31B-it,accepted_and_retrieval_valid_through_251873,,250000,251873,,,251873,,,,,251873,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,256000,gemma-4-31B-it,transport_accepted_but_retrieval_not_verified,130296,128000,126200,,,,,,,,130296,4096,tokens
+,,,,,,output limit,,8192,gemma-4-31B-it,realized_generation_observed,,,,16384,,,947,,,,947,,words
+,,,,,,vision,,False,gemma-4-31B-it,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,tool calling,,,gemma-4-31B-it,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,,gemma-4-31B-it,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,262144,glm-5.2,accepted_and_retrieval_valid_through_182823,,259523,265333,,,182823,,,,,265333,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,262144,glm-5.2,accepted_and_retrieval_valid_through_265289,265289,258572,261193,,265289,261193,,,,,265289,4096,tokens
+,,,,,,output limit,,262144,glm-5.2,realized_generation_observed,,,,262145,,,4096,,,,4096,,words
+,,,,,,vision,,False,glm-5.2,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,True,glm-5.2,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,True,glm-5.2,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,undocumented_probe_anchor,65536,prompt context window,undocumented_probe_anchor_value,,kimi-k3,accepted_and_retrieval_valid_through_158411,,250000,158411,,,158411,,,,,158411,,
+right_censored,False,False,True,undocumented_probe_anchor,65536,combined prompt + requested output,undocumented_probe_anchor_value,,kimi-k3,accepted_and_retrieval_valid_through_53633,53633,61696,49537,,53633,49537,,,,,53633,4096,tokens
+,,,,,,output limit,,,kimi-k3,realized_generation_observed,,,,65537,,,4096,,,64,4096,,words
+,,,,,,vision,,True,kimi-k3,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,tool calling,,,kimi-k3,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,,kimi-k3,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,65536,minimax-m2.5,accepted_and_retrieval_valid_through_166688,,250000,166688,,,166688,,,,,166688,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,65536,minimax-m2.5,transport_accepted_but_retrieval_not_verified,60051,61696,55955,,,,,,,,60051,4096,tokens
+,,,,,,output limit,,65536,minimax-m2.5,realized_generation_observed,,,,65537,,,4096,,,64,4096,,words
+,,,,,,vision,,False,minimax-m2.5,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,,minimax-m2.5,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,,minimax-m2.5,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,262144,mimo-v2.5-pro,accepted_and_retrieval_valid_through_245518,,262668,246006,,,245518,,,,,246006,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,262144,mimo-v2.5-pro,transport_accepted_but_retrieval_not_verified,246272,258572,242176,,,,,,,,246272,4096,tokens
+,,,,,,output limit,,262144,mimo-v2.5-pro,realized_generation_observed,,,,16384,,,4096,,,262145,4096,,words
+,,,,,,vision,,False,mimo-v2.5-pro,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,True,mimo-v2.5-pro,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,True,mimo-v2.5-pro,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,131072,nemotron-3-ultra-550b,accepted_and_retrieval_valid_through_76667,,131334,126009,,,76667,,,,,126009,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,131072,nemotron-3-ultra-550b,accepted_and_retrieval_valid_through_126176,126176,127238,122080,,126176,122080,,,,,126176,4096,tokens
+,,,,,,output limit,,131072,nemotron-3-ultra-550b,realized_generation_observed,,,,16384,,,4096,,,131073,4096,,words
+,,,,,,vision,,False,nemotron-3-ultra-550b,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,,nemotron-3-ultra-550b,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,,nemotron-3-ultra-550b,observed_functional,,,,,,,,,,,observed_functional,,
+interval_censored,False,True,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,1000000,nvidia-nemotron-3-super-120b,accepted_and_retrieval_valid_through_76667,,250000,248693,,,76667,,,312500,,248693,,
+left_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,1000000,nvidia-nemotron-3-super-120b,untested_or_inconclusive,,,,,,,,504096,500000,,,4096,tokens
+,,,,,,output limit,,32768,nvidia-nemotron-3-super-120b,realized_generation_observed,,,,32769,,,4096,,,64,4096,,words
+,,,,,,vision,,False,nvidia-nemotron-3-super-120b,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,,nvidia-nemotron-3-super-120b,inconclusive,,,,,,,,,,,inconclusive,,
+,,,,,,structured output,,,nvidia-nemotron-3-super-120b,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,128000,openai-gpt-oss-120b,accepted_and_retrieval_valid_through_66717,,128256,117477,,,66717,,,,,117477,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,128000,openai-gpt-oss-120b,accepted_and_retrieval_valid_through_117823,117823,124160,113727,,117823,113727,,,,,117823,4096,tokens
+,,,,,,output limit,,4096,openai-gpt-oss-120b,realized_generation_observed,,,,16384,,,4096,,,64,4096,,words
+,,,,,,vision,,False,openai-gpt-oss-120b,observed_rejected_or_unsupported,,,,,,,,,,,observed_rejected_or_unsupported,,
+,,,,,,tool calling,,,openai-gpt-oss-120b,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,,openai-gpt-oss-120b,observed_functional,,,,,,,,,,,observed_functional,,
+nonmonotonic_inconclusive,False,False,False,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,131072,qwen3.5-397b-a17b,nonmonotonic_context_outcomes_inconclusive,,124518,129818,,,98141,,,129761,,,,
+interval_censored,False,True,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,131072,qwen3.5-397b-a17b,accepted_and_retrieval_valid_through_70999,70999,65536,66903,,70999,66903,,130810,126714,,70999,4096,tokens
+,,,,,,output limit,,131072,qwen3.5-397b-a17b,realized_generation_observed,,,,1024,,,5632,,,64,5632,,words
+,,,,,,vision,,False,qwen3.5-397b-a17b,inconclusive,,,,,,,,,,,inconclusive,,
+,,,,,,tool calling,,,qwen3.5-397b-a17b,inconclusive,,,,,,,,,,,inconclusive,,
+,,,,,,structured output,,,qwen3.5-397b-a17b,observed_functional,,,,,,,,,,,observed_functional,,
+right_censored,False,False,True,advertised_official_documentation,,prompt context window,documented_or_inventory_unavailable,1000000,qwen3.8-max,accepted_and_retrieval_valid_through_1004307,,990000,1004307,,,1004307,,,,,1004307,,
+right_censored,False,False,True,advertised_official_documentation,,combined prompt + requested output,documented_or_inventory_unavailable,1000000,qwen3.8-max,accepted_and_retrieval_valid_through_1002293,1002293,995904,998197,,1002293,998197,,,,,1002293,4096,tokens
+,,,,,,output limit,,262144,qwen3.8-max,realized_generation_observed,,,,262145,,,10380,,,,10380,,words
+,,,,,,vision,,True,qwen3.8-max,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,tool calling,,True,qwen3.8-max,observed_functional,,,,,,,,,,,observed_functional,,
+,,,,,,structured output,,True,qwen3.8-max,observed_functional,,,,,,,,,,,observed_functional,,

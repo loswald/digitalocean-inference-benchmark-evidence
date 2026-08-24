@@ -1,0 +1,26 @@
+name: offline verification
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest -q
+      - name: Build a no-network smoke plan
+        run: >-
+          python scripts/run-digitalocean-direct-aimd.py
+          --output-dir tmp/plan-smoke
+          --duration-minutes 1
+          --plan-only

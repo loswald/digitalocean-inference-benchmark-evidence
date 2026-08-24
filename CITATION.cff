@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or its measurements, cite this repository."
+title: "DigitalOcean Inference Endpoint Benchmark"
+type: software
+version: 0.2.0
+date-released: 2026-08-24
+authors:
+  - name: "DigitalOcean public endpoint benchmark campaign"
+repository-code: "https://github.com/loswald/digitalocean-inference-endpoint-benchmark"
+license: MIT
