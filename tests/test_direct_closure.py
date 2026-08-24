@@ -165,6 +165,7 @@ def test_terminal_campaign_loads_with_controls_separate_from_probe_evidence(
     summary = asyncio.run(campaign.run(executor))
     assert summary["status"] == "complete"
     loaded = load_matched_closure_directory(tmp_path / "run")
+    assert loaded["summary"]["status"] == "complete"
     assert len(loaded["plans"]) == 4
     assert len(loaded["outcomes"]) == 4
     semantic = [

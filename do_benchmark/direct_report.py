@@ -3522,6 +3522,7 @@ def load_matched_closure_directory(path: Path) -> dict[str, Any]:
         "source_id": source_id,
         "campaign_id": campaign_id,
         "source_manifest_sha256": _sha256(manifest_path),
+        "summary": dict(summary),
         "plans": normalized_plans,
         "requests": normalized_requests,
         "outcomes": list(outcomes.values()),
@@ -7943,6 +7944,13 @@ def analyze_and_write(
                 "planned_semantic_probes": len(loaded["plans"]),
                 "physical_request_rows": len(loaded["requests"]),
                 "terminal_probe_outcomes": len(loaded["outcomes"]),
+                "conclusive_probe_outcomes": _integer(
+                    loaded["summary"].get("conclusive_cells")
+                ),
+                "http_status_counts": dict(
+                    _mapping(loaded["summary"].get("http_status_counts"))
+                ),
+                "finalization_mode": _text(loaded["summary"].get("finalization_mode")),
                 "nested_soak_waves": 0,
                 "request_rows": len(loaded["requests"]),
                 "cost_summary_required": True,
