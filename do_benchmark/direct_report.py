@@ -5868,6 +5868,10 @@ def validate_public_analysis_contract(
                 "complete",
                 "incomplete_or_censored",
             },
+            "do_matched_closure_summary_v1": {
+                "complete",
+                "incomplete_or_censored",
+            },
         }
         for index, stage in enumerate(stage_rows):
             pointer = f"cost_summary.source_stages[{index}]"

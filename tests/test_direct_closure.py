@@ -12,7 +12,7 @@ from do_benchmark.direct_closure import (
     _failure_metrics,
     build_cells,
 )
-from do_benchmark.direct_report import load_matched_closure_directory
+from do_benchmark.direct_report import analyze_and_write, load_matched_closure_directory
 
 
 MODEL = "arcee-trinity-large-thinking"
@@ -178,6 +178,20 @@ def test_terminal_campaign_loads_with_controls_separate_from_probe_evidence(
     assert len(controls) == 2
     assert all(row["coverage_conclusive"] is True for row in semantic)
     assert all(row["coverage_conclusive"] is None for row in controls)
+
+    analysis = analyze_and_write(
+        breadth_directories=[],
+        aimd_directories=[],
+        closure_directories=[tmp_path / "run"],
+        endpoint_freeze=Path(__file__).resolve().parents[1]
+        / "config"
+        / "endpoint-freeze.json",
+        output_directory=tmp_path / "analysis",
+        bootstrap_replicates=5,
+        publication_mode="draft",
+    )
+    stage = analysis["cost_summary"]["source_stages"][-1]
+    assert stage["summary_schema_version"] == "do_matched_closure_summary_v1"
 
 
 def test_finalize_without_sends_preserves_incomplete_rows(tmp_path: Path) -> None:
