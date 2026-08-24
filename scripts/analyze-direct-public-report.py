@@ -26,6 +26,7 @@ def main() -> int:
     parser.add_argument("--aimd-dir", type=Path, action="append", default=[])
     parser.add_argument("--soak-dir", type=Path, action="append", default=[])
     parser.add_argument("--completion-dir", type=Path, action="append", default=[])
+    parser.add_argument("--closure-dir", type=Path, action="append", default=[])
     parser.add_argument(
         "--endpoint-freeze",
         type=Path,
@@ -44,13 +45,20 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
-    if not (args.breadth_dir or args.aimd_dir or args.soak_dir or args.completion_dir):
+    if not (
+        args.breadth_dir
+        or args.aimd_dir
+        or args.soak_dir
+        or args.completion_dir
+        or args.closure_dir
+    ):
         parser.error("at least one evidence source is required")
     analysis = analyze_and_write(
         breadth_directories=args.breadth_dir,
         aimd_directories=args.aimd_dir,
         soak_directories=args.soak_dir,
         completion_directories=args.completion_dir,
+        closure_directories=args.closure_dir,
         endpoint_freeze=args.endpoint_freeze,
         output_directory=args.output_dir,
         seed=args.seed,

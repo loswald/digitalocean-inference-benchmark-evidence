@@ -40,6 +40,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--duration-minutes", type=float, required=True)
     parser.add_argument("--seed", type=int, default=20260824)
     parser.add_argument("--plan-only", action="store_true")
+    parser.add_argument(
+        "--finalize-only",
+        action="store_true",
+        help="write an incomplete terminal summary from durable rows; send nothing",
+    )
     return parser
 
 
@@ -62,6 +67,8 @@ def main() -> int:
         seed=args.seed,
     )
     campaign = MatchedClosureCampaign(config)
+    if args.plan_only and args.finalize_only:
+        raise SystemExit("--plan-only and --finalize-only are mutually exclusive")
     if args.plan_only:
         print(
             json.dumps(
@@ -87,6 +94,9 @@ def main() -> int:
                 sort_keys=True,
             )
         )
+        return 0
+    if args.finalize_only:
+        print(json.dumps(campaign.finalize_without_sends(), indent=2, sort_keys=True))
         return 0
     print(json.dumps(asyncio.run(campaign.run()), indent=2, sort_keys=True))
     return 0

@@ -57,6 +57,11 @@ COMPLETION_OUTCOME_SCHEMA = "do_direct_completion_probe_outcome_v1"
 COMPLETION_SUMMARY_SCHEMA = "do_direct_completion_summary_v1"
 COMPLETION_SOAK_WAVE_SCHEMA = "do_direct_completion_soak_wave_v1"
 COMPLETION_SOAK_CENSOR_SCHEMA = "do_direct_completion_soak_censor_v1"
+MATCHED_CLOSURE_PLAN_SCHEMA = "do_matched_closure_plan_v1"
+MATCHED_CLOSURE_MANIFEST_SCHEMA = "do_matched_closure_manifest_v1"
+MATCHED_CLOSURE_REQUEST_SCHEMA = "do_matched_closure_request_v1"
+MATCHED_CLOSURE_OUTCOME_SCHEMA = "do_matched_closure_outcome_v1"
+MATCHED_CLOSURE_SUMMARY_SCHEMA = "do_matched_closure_summary_v1"
 
 COMPLETION_LANES = frozenset(
     {"capability_retry", "context_retry", "realized_output", "cache_observation"}
@@ -107,6 +112,7 @@ REJECTED_REQUEST_CLASSIFICATIONS = frozenset(
         "explicit_context_limit_rejection",
         "rejected_or_unsupported",
         "documented_unavailable",
+        "matched_control_rejection",
     }
 )
 
@@ -3330,6 +3336,196 @@ def _completion_terminal_window(summary: Mapping[str, Any]) -> tuple[str, str]:
     if started is None or ended is None or str(ended) < str(started):
         raise DirectReportError("direct completion terminal window is invalid")
     return started, ended
+
+
+def load_matched_closure_directory(path: Path) -> dict[str, Any]:
+    """Load one terminal matched-control closure campaign.
+
+    Physical control requests remain in the cost and reliability accounting, but
+    only the final probe request inherits the semantic capability outcome.  This
+    prevents a healthy control from being mistaken for evidence that the tested
+    parameter or capability itself worked.
+    """
+
+    directory = Path(path)
+    source_id = directory.name
+    manifest_path = directory / "manifest.json"
+    plan_path = directory / "plan.jsonl"
+    attempts_path = directory / "attempts.jsonl"
+    outcomes_path = directory / "records.jsonl"
+    summary_path = directory / "summary.json"
+    required = (
+        manifest_path,
+        plan_path,
+        attempts_path,
+        outcomes_path,
+        summary_path,
+    )
+    if any(not candidate.is_file() for candidate in required):
+        raise DirectReportError(
+            "matched closure requires manifest.json, plan.jsonl, attempts.jsonl, "
+            "records.jsonl, and terminal summary.json"
+        )
+    try:
+        manifest = _read_json(manifest_path)
+        summary = _read_json(summary_path)
+        raw_plans = _read_jsonl(plan_path)
+        raw_attempts = _read_jsonl(attempts_path)
+        raw_outcomes = _read_jsonl(outcomes_path)
+    except (OSError, ValueError) as error:
+        raise DirectReportError("matched closure contains invalid JSON") from error
+    if (
+        not isinstance(manifest, Mapping)
+        or manifest.get("schema_version") != MATCHED_CLOSURE_MANIFEST_SCHEMA
+        or not isinstance(summary, Mapping)
+        or summary.get("schema_version") != MATCHED_CLOSURE_SUMMARY_SCHEMA
+    ):
+        raise DirectReportError("matched closure metadata schema is invalid")
+    plan_sha256 = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+    campaign_id = _text(manifest.get("campaign_id"))
+    if (
+        campaign_id is None
+        or manifest.get("plan_sha256") != plan_sha256
+        or summary.get("campaign_id") != campaign_id
+        or summary.get("plan_sha256") != plan_sha256
+        or summary.get("status") not in COMPLETION_TERMINAL_STATUSES
+    ):
+        raise DirectReportError("matched closure identity or terminal status disagrees")
+
+    plans_by_id: dict[str, dict[str, Any]] = {}
+    normalized_plans: list[dict[str, Any]] = []
+    for value in raw_plans:
+        row = _mapping(value)
+        cell_id = _text(row.get("cell_id"))
+        endpoint = _require_endpoint(row.get("model_id") or row.get("endpoint_id"))
+        probe_id = _text(row.get("probe_id"))
+        workload = _text(row.get("workload_id"))
+        task = _mapping(row.get("task"))
+        task_id = _text(task.get("task_id"))
+        requested_output = _integer(row.get("requested_max_output_tokens"))
+        if (
+            row.get("schema_version") != MATCHED_CLOSURE_PLAN_SCHEMA
+            or cell_id is None
+            or cell_id in plans_by_id
+            or probe_id is None
+            or workload is None
+            or task_id is None
+            or requested_output is None
+            or requested_output <= 0
+        ):
+            raise DirectReportError("matched closure plan row is invalid")
+        plans_by_id[cell_id] = dict(row)
+        normalized_plans.append(
+            {
+                "source_kind": "direct_completion",
+                "source_id": source_id,
+                "cell_id": cell_id,
+                "endpoint_id": endpoint,
+                "probe_id": probe_id,
+                "workload": workload,
+                "shape": _text(row.get("shape")) or "matched_control_closure",
+                "phase": _text(row.get("phase")),
+                "task_id": task_id,
+                "planned_attempt_count": 1,
+                "physical_attempt_slot_count": _integer(manifest.get("max_attempts")),
+                "request_payload_sha256": _text(row.get("rendered_payload_sha256")),
+                "campaign_plan_sha256": plan_sha256,
+                "requested_output_target": requested_output,
+                "requested_output_unit": "tokens",
+            }
+        )
+    if _integer(manifest.get("planned_cells")) != len(plans_by_id) or _integer(
+        summary.get("planned_cells")
+    ) != len(plans_by_id):
+        raise DirectReportError("matched closure plan counts do not reconcile")
+
+    outcomes: dict[str, dict[str, Any]] = {}
+    for value in raw_outcomes:
+        row = _mapping(value)
+        cell_id = _text(row.get("cell_id"))
+        plan = plans_by_id.get(str(cell_id))
+        if (
+            row.get("schema_version") != MATCHED_CLOSURE_OUTCOME_SCHEMA
+            or cell_id is None
+            or cell_id in outcomes
+            or plan is None
+            or row.get("campaign_id") != campaign_id
+            or row.get("plan_sha256") != plan_sha256
+            or row.get("model_id") != plan.get("model_id")
+            or row.get("probe_id") != plan.get("probe_id")
+        ):
+            raise DirectReportError("matched closure outcome row is inconsistent")
+        outcomes[cell_id] = dict(row)
+
+    if _integer(summary.get("terminal_cells")) != len(outcomes) or _integer(
+        summary.get("conclusive_cells")
+    ) != sum(row.get("coverage_conclusive") is True for row in outcomes.values()):
+        raise DirectReportError("matched closure outcome counts do not reconcile")
+    if summary.get("status") == "complete" and len(outcomes) != len(plans_by_id):
+        raise DirectReportError("matched closure claims complete with missing outcomes")
+
+    normalized_requests: list[dict[str, Any]] = []
+    request_ids: set[str] = set()
+    for value in raw_attempts:
+        row = dict(_mapping(value))
+        request_id = _text(row.get("request_id"))
+        cell_id = _text(row.get("cell_id"))
+        plan = plans_by_id.get(str(cell_id))
+        outcome = outcomes.get(str(cell_id), {})
+        if (
+            row.get("schema_version") != MATCHED_CLOSURE_REQUEST_SCHEMA
+            or request_id is None
+            or request_id in request_ids
+            or plan is None
+            or row.get("campaign_id") != campaign_id
+            or row.get("plan_sha256") != plan_sha256
+            or row.get("model_id") != plan.get("model_id")
+            or row.get("probe_id") != plan.get("probe_id")
+            or row.get("provider_send_attempted") is not True
+        ):
+            raise DirectReportError("matched closure request row is inconsistent")
+        request_ids.add(request_id)
+        final_request_id = _text(outcome.get("semantic_final_request_id"))
+        is_semantic = request_id == final_request_id
+        row.update(
+            {
+                "semantic_id": cell_id,
+                "semantic_final_request_id": final_request_id,
+                "semantic_coverage_attempt": is_semantic,
+                "task_id": _text(_mapping(plan.get("task")).get("task_id")),
+                "coverage_tags": plan.get("coverage_tags") or [],
+                "rendered_payload_sha256": plan.get("rendered_payload_sha256"),
+                "request_identity_sha256": plan.get("request_identity_sha256"),
+            }
+        )
+        if is_semantic:
+            for key in (
+                "coverage_classification",
+                "coverage_conclusive",
+                "capability_status",
+                "functional_valid",
+                "quality_score",
+                "score_kind",
+                "finish_reason",
+            ):
+                row[key] = outcome.get(key)
+        normalized = normalize_request(
+            row,
+            source_kind="direct_completion",
+            source_id=source_id,
+        )
+        normalized_requests.append(normalized)
+
+    if _integer(summary.get("provider_attempts")) != len(normalized_requests):
+        raise DirectReportError("matched closure request count does not reconcile")
+    return {
+        "source_id": source_id,
+        "campaign_id": campaign_id,
+        "source_manifest_sha256": _sha256(manifest_path),
+        "plans": normalized_plans,
+        "requests": normalized_requests,
+        "outcomes": list(outcomes.values()),
+    }
 
 
 def load_completion_directory(path: Path) -> dict[str, Any]:
@@ -7228,7 +7424,10 @@ def _source_cost_ledger_fields(
     expected_schemas = {
         "direct_aimd": {"do_direct_summary_v1"},
         "direct_soak": {"do_direct_soak_summary_v1"},
-        "direct_completion": {"do_direct_completion_summary_v1"},
+        "direct_completion": {
+            "do_direct_completion_summary_v1",
+            "do_matched_closure_summary_v1",
+        },
         "direct_breadth": {
             "do_direct_capability_summary_v3",
             "do_direct_context_summary_v3",
@@ -7253,6 +7452,8 @@ def _source_cost_ledger_fields(
     elif schema == "do_direct_context_summary_v3":
         terminal = summary.get("execution_complete") is True
     elif schema == "do_direct_completion_summary_v1":
+        terminal = terminal_status in COMPLETION_TERMINAL_STATUSES
+    elif schema == "do_matched_closure_summary_v1":
         terminal = terminal_status in COMPLETION_TERMINAL_STATUSES
     if not terminal:
         raise DirectReportError(f"{source.name}: cost summary is not terminal")
@@ -7586,6 +7787,7 @@ def analyze_and_write(
     aimd_directories: Sequence[Path],
     soak_directories: Sequence[Path] = (),
     completion_directories: Sequence[Path] = (),
+    closure_directories: Sequence[Path] = (),
     endpoint_freeze: Path,
     output_directory: Path,
     seed: int = 20260823,
@@ -7728,6 +7930,29 @@ def analyze_and_write(
                 parent_completion_source_id=loaded["source_id"],
             )
         nested_soak_directories.update(loaded["nested_soak_directories"])
+    for path in closure_directories:
+        loaded = load_matched_closure_directory(path)
+        plans.extend(loaded["plans"])
+        requests.extend(loaded["requests"])
+        sources.append(
+            {
+                "source_kind": "direct_completion",
+                "source_id": loaded["source_id"],
+                "campaign_id": loaded["campaign_id"],
+                "source_manifest_sha256": loaded["source_manifest_sha256"],
+                "planned_semantic_probes": len(loaded["plans"]),
+                "physical_request_rows": len(loaded["requests"]),
+                "terminal_probe_outcomes": len(loaded["outcomes"]),
+                "nested_soak_waves": 0,
+                "request_rows": len(loaded["requests"]),
+                "cost_summary_required": True,
+                **_source_cost_ledger_fields(
+                    path,
+                    expected_source_kind="direct_completion",
+                    required=True,
+                ),
+            }
+        )
     for path in soak_directories:
         if Path(path).resolve() in nested_soak_directories:
             continue

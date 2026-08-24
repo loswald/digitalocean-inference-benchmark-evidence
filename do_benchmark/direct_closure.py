@@ -706,6 +706,10 @@ class MatchedClosureCampaign:
         return {
             "schema_version": SUMMARY_SCHEMA,
             "campaign_id": self.campaign_id,
+            "plan_sha256": self.plan_sha256,
+            "status": (
+                "complete" if len(rows) == len(self.cells) else "incomplete_or_censored"
+            ),
             "started_at": started_at,
             "ended_at": utc_now(),
             "planned_cells": len(self.cells),
@@ -794,6 +798,30 @@ class MatchedClosureCampaign:
                     )
 
                 return await self._run_locked(live_executor)
+
+    def finalize_without_sends(self) -> dict[str, Any]:
+        """Seal the durable rows currently present without issuing a request.
+
+        This is for interrupted campaigns whose spend must remain in the
+        cumulative ledger even when access failure prevents safe resumption.
+        It deliberately leaves missing cells censored and never fabricates an
+        outcome from a physical attempt.
+        """
+
+        with OutputDirectoryLease(self.lease_path):
+            started_values = [
+                str(row.get("started_at"))
+                for row in self.attempts.values()
+                if row.get("started_at")
+            ]
+            started_at = min(started_values) if started_values else utc_now()
+            summary = self._summary(started_at)
+            summary["finalization_mode"] = "offline_no_provider_sends"
+            (self.output_dir / "summary.json").write_text(
+                json.dumps(summary, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            return summary
 
 
 def default_model_ids() -> tuple[str, ...]:
