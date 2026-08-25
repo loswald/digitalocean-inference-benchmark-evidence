@@ -905,7 +905,10 @@ def _executive_pages(
                 [
                     (f"{request_rows:,}", "REQUEST OBSERVATIONS"),
                     (f"{epoch_rows:,}", "LOAD EPOCHS"),
-                    (f"{complete}", "RESOLVED CELLS"),
+                    (
+                        f"{coverage.get('completed', 0) + coverage.get('unsupported', 0) + coverage.get('operational_failure', 0)}",
+                        "RESOLVED CELLS",
+                    ),
                     (
                         f"{coverage.get('operational_failure', 0)}",
                         "OPERATIONAL FAILURES",
@@ -1151,7 +1154,9 @@ def _endpoint_pages(
                         (_fmt(summary.get("epoch_count"), 0), "LOAD EPOCHS"),
                         (_fmt(summary.get("error_count"), 0), "ERRORS"),
                         (
-                            f"{coverage.get('completed', 0) + coverage.get('unsupported', 0) + coverage.get('operational_failure', 0)}/16",
+                            (
+                                f"{coverage.get('completed', 0) + coverage.get('unsupported', 0) + coverage.get('operational_failure', 0)}/16"
+                            ),
                             "RESOLVED DIMENSIONS",
                         ),
                     ],
