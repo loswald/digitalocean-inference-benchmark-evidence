@@ -239,6 +239,7 @@ def _coverage_plot(
     statuses = [
         "completed",
         "unsupported",
+        "operational_failure",
         "degraded",
         "inconclusive",
         "skipped",
@@ -247,6 +248,7 @@ def _coverage_plot(
     colors = [
         PALETTE["green"],
         PALETTE["purple"],
+        PALETTE["red"],
         PALETTE["orange"],
         "#F0C419",
         PALETTE["gray"],
@@ -256,6 +258,7 @@ def _coverage_plot(
     status_symbols = {
         "completed": "C",
         "unsupported": "U",
+        "operational_failure": "F",
         "degraded": "D",
         "inconclusive": "?",
         "skipped": "S",
@@ -271,7 +274,7 @@ def _coverage_plot(
         return False
     matrix = [
         [
-            status_index.get(lookup.get((endpoint, dimension), "untested"), 5)
+                status_index.get(lookup.get((endpoint, dimension), "untested"), 6)
             for dimension in dimensions
         ]
         for endpoint in endpoints
@@ -280,7 +283,7 @@ def _coverage_plot(
     from matplotlib.patches import Patch
 
     fig, ax = plt.subplots(figsize=(13.2, 8.0))
-    ax.imshow(matrix, aspect="auto", cmap=ListedColormap(colors), vmin=-0.5, vmax=5.5)
+    ax.imshow(matrix, aspect="auto", cmap=ListedColormap(colors), vmin=-0.5, vmax=6.5)
     ax.set_xticks(
         range(len(dimensions)),
         [value.replace("_", " ") for value in dimensions],
@@ -297,7 +300,9 @@ def _coverage_plot(
         for dimension_index, dimension in enumerate(dimensions):
             status = lookup.get((endpoint, dimension), "untested")
             foreground = (
-                "white" if status in {"completed", "unsupported"} else "#17212B"
+                "white"
+                if status in {"completed", "unsupported", "operational_failure"}
+                else "#17212B"
             )
             ax.text(
                 dimension_index,

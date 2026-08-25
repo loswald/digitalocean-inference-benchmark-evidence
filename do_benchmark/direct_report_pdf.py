@@ -1484,6 +1484,9 @@ def _coverage_table(
             for key, value in statuses.items()
             if "unsupported" in key or "not_supported" in key
         ),
+        "operational_failure": sum(
+            value for key, value in statuses.items() if "operational_failure" in key
+        ),
         "untested": sum(
             value
             for key, value in statuses.items()
@@ -1495,9 +1498,19 @@ def _coverage_table(
         "completed": "A planned cell produced usable evidence.",
         "inconclusive": "The attempt ran, but evidence was insufficient for a claim.",
         "unsupported": "The API or endpoint rejected the capability as unsupported.",
+        "operational_failure": (
+            "Repeated controlled provider failure completed the experiment; "
+            "capability support remains unknown."
+        ),
         "untested": "No result exists; this is not a pass or a zero.",
     }
-    for key in ("completed", "inconclusive", "unsupported", "untested"):
+    for key in (
+        "completed",
+        "operational_failure",
+        "inconclusive",
+        "unsupported",
+        "untested",
+    ):
         table_rows.append([key.title(), normalized[key], meanings[key]])
     return _table(table_rows, [38 * mm, 22 * mm, 114 * mm], styles)
 
@@ -2012,6 +2025,7 @@ def _executive_summary(
         total_requests = len(inputs.csvs.get("normalized-requests.csv", ())) or None
     completed = _first(
         coverage,
+        "resolved_experiment_cells",
         "completed_or_evidence_backed_unsupported_cells",
         "completed",
         "completed_cells",
@@ -2326,9 +2340,10 @@ def _cross_endpoint_section(
                 ),
             ),
             (
-                "Completed or evidence-backed unsupported",
+                "Resolved experiments (including operational failures)",
                 _first(
                     coverage,
+                    "resolved_experiment_cells",
                     "completed_or_evidence_backed_unsupported_cells",
                     "completed_cells",
                     "completed",
@@ -2337,6 +2352,7 @@ def _cross_endpoint_section(
             ),
             ("Completed", status_counts.get("completed")),
             ("Unsupported", status_counts.get("unsupported")),
+            ("Operational failure", status_counts.get("operational_failure")),
             ("Inconclusive", status_counts.get("inconclusive")),
             (
                 "Untested / skipped",

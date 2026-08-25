@@ -535,8 +535,13 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
         {str(row["coverage_dimension"]) for row in bundle.rows["coverage-matrix.csv"]}
     )
     dimension_labels = [dimension.replace("_", " ") for dimension in dimensions]
-    statuses = ("completed", "unsupported", "inconclusive")
-    palette = {"completed": TEAL, "unsupported": GRAY, "inconclusive": AMBER}
+    statuses = ("completed", "unsupported", "operational_failure", "inconclusive")
+    palette = {
+        "completed": TEAL,
+        "unsupported": GRAY,
+        "operational_failure": RED,
+        "inconclusive": AMBER,
+    }
     left = [0] * len(dimensions)
     for status in statuses:
         values = [
@@ -558,7 +563,7 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
     ax.set_xlim(0, len(REPORT_ENDPOINT_IDS))
     ax.set_xlabel(f"DigitalOcean-hosted endpoints (of {len(REPORT_ENDPOINT_IDS)})")
     ax.set_title("Evidence status by required benchmark dimension", loc="left")
-    ax.legend(frameon=False, ncol=3, loc="upper right")
+    ax.legend(frameon=False, ncol=2, loc="upper right")
     ax.spines[["top", "right", "left"]].set_visible(False)
     charts.append(_save(fig, output / "coverage-by-dimension.png"))
 
@@ -809,7 +814,11 @@ def _cover(styles: Mapping[str, ParagraphStyle], bundle: Bundle) -> Flowable:
         for row in bundle.rows["coverage-matrix.csv"]
         if row.get("endpoint_id") in REPORT_ENDPOINT_IDS
     )
-    complete = coverage.get("completed", 0) + coverage.get("unsupported", 0)
+    complete = (
+        coverage.get("completed", 0)
+        + coverage.get("unsupported", 0)
+        + coverage.get("operational_failure", 0)
+    )
     request_rows = sum(
         _integer(row.get("request_count")) or 0
         for row in bundle.rows["endpoint-summary.csv"]

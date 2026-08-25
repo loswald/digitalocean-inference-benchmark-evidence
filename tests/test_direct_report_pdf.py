@@ -95,6 +95,7 @@ def test_pdf_story_uses_only_public_bundle_and_has_hosted_profiles(
             "observed_attempt_count": 1 if index < completed_cells else 0,
             "completed_subcell_count": 1 if index < completed_cells else 0,
             "unsupported_subcell_count": 0,
+            "operational_failure_subcell_count": 0,
             "inconclusive_subcell_count": 0,
             "skipped_subcell_count": 0,
             "superseded_subcell_count": 0,
@@ -210,7 +211,8 @@ def test_pdf_story_uses_only_public_bundle_and_has_hosted_profiles(
             "required_endpoint_count": len(EXPECTED_ENDPOINT_IDS),
             "required_dimension_count": len(REQUIRED_COVERAGE_DIMENSIONS),
             "required_endpoint_dimension_cells": required_cells,
-            "completed_or_evidence_backed_unsupported_cells": completed_cells,
+                "completed_or_evidence_backed_unsupported_cells": completed_cells,
+                "resolved_experiment_cells": completed_cells,
             "coverage_fraction": completed_cells / required_cells,
             "is_100_percent": False,
             "status_counts": {
@@ -263,6 +265,7 @@ def test_pdf_story_uses_only_public_bundle_and_has_hosted_profiles(
                             "observed_attempt_count",
                             "completed_subcell_count",
                             "unsupported_subcell_count",
+                            "operational_failure_subcell_count",
                             "inconclusive_subcell_count",
                             "skipped_subcell_count",
                             "superseded_subcell_count",
@@ -372,6 +375,7 @@ def test_pdf_story_uses_only_public_bundle_and_has_hosted_profiles(
     analysis["coverage_summary"].update(
         {
             "completed_or_evidence_backed_unsupported_cells": len(coverage_matrix),
+            "resolved_experiment_cells": len(coverage_matrix),
             "coverage_fraction": 1.0,
             "is_100_percent": True,
             "status_counts": {"completed": len(coverage_matrix)},
@@ -394,6 +398,7 @@ def test_pdf_story_uses_only_public_bundle_and_has_hosted_profiles(
                 "observed_attempt_count",
                 "completed_subcell_count",
                 "unsupported_subcell_count",
+                "operational_failure_subcell_count",
                 "inconclusive_subcell_count",
                 "skipped_subcell_count",
                 "superseded_subcell_count",

@@ -902,6 +902,38 @@ def test_broad_coverage_keeps_inconclusive_subcells_without_poisoning_completion
     assert row["unsupported_subcell_count"] == 0
 
 
+def test_repeated_controlled_provider_failure_resolves_execution_not_capability() -> None:
+    endpoint = DEEPSEEK_ENDPOINT_ID
+    plans = [
+        {
+            "source_kind": "direct_completion",
+            "source_id": "matched-closure",
+            "endpoint_id": endpoint,
+            "cell_id": "tool-provider-failure",
+            "probe_id": "tools-required",
+            "task_id": "tools-required",
+            "workload": "tool_calling",
+            "shape": "matched_control_closure",
+            "planned_attempt_count": 1,
+            "terminal_outcome_status": "provider_error",
+            "terminal_coverage_classification": (
+                "matched_control_repeated_provider_failure"
+            ),
+        }
+    ]
+    ledger, matrix, summary = build_coverage(plans, [], [])
+    assert ledger[0]["status"] == "operational_failure"
+    row = next(
+        item
+        for item in matrix
+        if item["endpoint_id"] == endpoint
+        and item["coverage_dimension"] == "tool_calling"
+    )
+    assert row["status"] == "operational_failure"
+    assert row["operational_failure_subcell_count"] == 1
+    assert summary["resolved_experiment_cells"] == 1
+
+
 def test_zero_quality_score_is_a_scored_failure_not_missing_evidence() -> None:
     raw = _breadth_record(cell_id="quality-zero", family="short_short")
     raw.update(
@@ -1420,6 +1452,9 @@ def test_missing_endpoint_rows_are_explicitly_untested(tmp_path: Path) -> None:
     spoofed["coverage_summary"].update(
         {
             "completed_or_evidence_backed_unsupported_cells": (
+                len(EXPECTED_ENDPOINT_IDS) * len(REQUIRED_COVERAGE_DIMENSIONS)
+            ),
+            "resolved_experiment_cells": (
                 len(EXPECTED_ENDPOINT_IDS) * len(REQUIRED_COVERAGE_DIMENSIONS)
             ),
             "coverage_fraction": 1.0,

@@ -3459,6 +3459,16 @@ def load_matched_closure_directory(path: Path) -> dict[str, Any]:
     if summary.get("status") == "complete" and len(outcomes) != len(plans_by_id):
         raise DirectReportError("matched closure claims complete with missing outcomes")
 
+    for plan_row in normalized_plans:
+        outcome = outcomes.get(str(plan_row["cell_id"]), {})
+        plan_row["semantic_final_request_id"] = _text(
+            outcome.get("semantic_final_request_id")
+        )
+        plan_row["terminal_outcome_status"] = _text(outcome.get("status"))
+        plan_row["terminal_coverage_classification"] = _text(
+            outcome.get("coverage_classification")
+        )
+
     normalized_requests: list[dict[str, Any]] = []
     request_ids: set[str] = set()
     for value in raw_attempts:
@@ -4905,11 +4915,17 @@ def build_coverage(
             and not rows
             and plan.get("terminal_outcome_status") is not None
         ):
-            coverage_status = (
-                "skipped"
-                if str(plan.get("terminal_outcome_status")).startswith("skipped")
-                else "inconclusive"
+            terminal_classification = str(
+                plan.get("terminal_coverage_classification") or ""
             )
+            if terminal_classification == "matched_control_repeated_provider_failure":
+                coverage_status = "operational_failure"
+            else:
+                coverage_status = (
+                    "skipped"
+                    if str(plan.get("terminal_outcome_status")).startswith("skipped")
+                    else "inconclusive"
+                )
         coverage_row = {
             "source_kind": plan["source_kind"],
             "source_id": plan["source_id"],
@@ -4936,6 +4952,9 @@ def build_coverage(
                     "nonfinal_physical_attempt_count": len(physical_rows) - len(rows),
                     "semantic_attempt_policy": "declared_final_request_id_only",
                     "semantic_final_request_id": plan.get("semantic_final_request_id"),
+                    "terminal_coverage_classification": plan.get(
+                        "terminal_coverage_classification"
+                    ),
                     "supersedes_request_id": plan.get("supersedes_request_id"),
                 }
             )
@@ -5409,6 +5428,8 @@ def build_coverage(
                 status = "completed"
             elif statuses.get("unsupported"):
                 status = "unsupported"
+            elif statuses.get("operational_failure"):
+                status = "operational_failure"
             elif statuses.get("inconclusive"):
                 status = "inconclusive"
             elif statuses.get("skipped"):
@@ -5427,6 +5448,9 @@ def build_coverage(
                     ),
                     "completed_subcell_count": statuses.get("completed", 0),
                     "unsupported_subcell_count": statuses.get("unsupported", 0),
+                    "operational_failure_subcell_count": statuses.get(
+                        "operational_failure", 0
+                    ),
                     "inconclusive_subcell_count": statuses.get("inconclusive", 0),
                     "skipped_subcell_count": statuses.get("skipped", 0),
                     "superseded_subcell_count": statuses.get("superseded", 0),
@@ -5437,7 +5461,10 @@ def build_coverage(
                     "has_explicit_scope_exclusions": has_scope_exclusion,
                 }
             )
-    completed = sum(row["status"] in {"completed", "unsupported"} for row in matrix)
+    resolved = sum(
+        row["status"] in {"completed", "unsupported", "operational_failure"}
+        for row in matrix
+    )
     return (
         ledger,
         matrix,
@@ -5445,9 +5472,12 @@ def build_coverage(
             "required_endpoint_count": len(EXPECTED_ENDPOINT_IDS),
             "required_dimension_count": len(REQUIRED_COVERAGE_DIMENSIONS),
             "required_endpoint_dimension_cells": len(matrix),
-            "completed_or_evidence_backed_unsupported_cells": completed,
-            "coverage_fraction": completed / len(matrix),
-            "is_100_percent": completed == len(matrix),
+            "resolved_experiment_cells": resolved,
+            # Legacy key retained for existing consumers. Its value now means
+            # resolved experimental coverage, as the explicit claim below says.
+            "completed_or_evidence_backed_unsupported_cells": resolved,
+            "coverage_fraction": resolved / len(matrix),
+            "is_100_percent": resolved == len(matrix),
             "status_counts": dict(
                 sorted(Counter(row["status"] for row in matrix).items())
             ),
@@ -5456,9 +5486,9 @@ def build_coverage(
             "coverage_claim": (
                 "Broad endpoint-by-dimension coverage. A completed exact subcell "
                 "establishes that the dimension was exercised; unsupported, "
-                "inconclusive, skipped, superseded, failed-replicate, and named "
-                "zero-attempt subtests remain separately counted and are not "
-                "implied successful."
+                "operational-failure, inconclusive, skipped, superseded, "
+                "failed-replicate, and named zero-attempt subtests remain "
+                "separately counted and are not implied successful."
             ),
         },
     )
@@ -6438,6 +6468,7 @@ def validate_public_analysis_contract(
     allowed_coverage_statuses = {
         "completed",
         "unsupported",
+        "operational_failure",
         "inconclusive",
         "skipped",
         "untested",
@@ -6451,6 +6482,7 @@ def validate_public_analysis_contract(
             "observed_attempt_count",
             "completed_subcell_count",
             "unsupported_subcell_count",
+            "operational_failure_subcell_count",
             "inconclusive_subcell_count",
             "skipped_subcell_count",
             "superseded_subcell_count",
@@ -6470,11 +6502,12 @@ def validate_public_analysis_contract(
             )
     matrix_status_counts = Counter(str(row.get("status") or "") for row in matrix_rows)
     matrix_completed = sum(
-        status in {"completed", "unsupported"}
+        status in {"completed", "unsupported", "operational_failure"}
         for status in (str(row.get("status") or "") for row in matrix_rows)
     )
     required = _integer(coverage.get("required_endpoint_dimension_cells"))
     completed = _integer(coverage.get("completed_or_evidence_backed_unsupported_cells"))
+    resolved = _integer(coverage.get("resolved_experiment_cells"))
     fraction = _number(coverage.get("coverage_fraction"))
     frozen_required = len(expected_pairs)
     if (
@@ -6490,6 +6523,8 @@ def validate_public_analysis_contract(
         errors.append("coverage_summary completed/required counts are invalid")
     elif completed != matrix_completed:
         errors.append("coverage_summary completed count disagrees with coverage_matrix")
+    elif resolved != matrix_completed:
+        errors.append("coverage_summary resolved count disagrees with coverage_matrix")
     elif fraction is None or not math.isclose(
         fraction, matrix_completed / frozen_required, rel_tol=0, abs_tol=1e-12
     ):
