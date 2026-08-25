@@ -883,6 +883,47 @@ def _executive_pages(
     )
     chart = {path.stem: path for path in charts}
     access_incident = _access_incident(bundle)
+    soak = _best_soak_rows(bundle)
+    strict_passes = {
+        (endpoint, shape)
+        for (endpoint, shape), row in soak.items()
+        if _truth(row.get("soak_acceptance_pass"))
+    }
+    short_pilot_endpoints = [
+        endpoint
+        for endpoint in REPORT_ENDPOINT_IDS
+        if (endpoint, "short_short") in strict_passes
+    ]
+    tool_hold_endpoints: list[str] = []
+    vision_verified_endpoints: list[str] = []
+    for endpoint in REPORT_ENDPOINT_IDS:
+        capability = {
+            row.get("capability_dimension"): row
+            for row in _capability_rows(bundle, endpoint)
+        }
+        tool = capability.get("tools", {})
+        if tool.get("transport_status") == "observed_transport_degraded":
+            tool_hold_endpoints.append(endpoint)
+        vision = capability.get("vision", {})
+        if (
+            vision.get("transport_status") == "observed_supported"
+            and vision.get("functional_status") == "passed"
+        ):
+            vision_verified_endpoints.append(endpoint)
+    million_token_retrieval_endpoints = [
+        endpoint
+        for endpoint in REPORT_ENDPOINT_IDS
+        if any(
+            row.get("dimension") == "prompt context window"
+            and (_num(row.get("maximum_functionally_valid_input_tokens")) or 0)
+            >= 900_000
+            for row in _limit_rows(bundle, endpoint)
+        )
+    ]
+
+    def endpoint_list(endpoint_ids: Sequence[str]) -> str:
+        return ", ".join(_short(endpoint) for endpoint in endpoint_ids) or "None"
+
     story: list[Flowable] = [PageBreak(), _p("1. What the evidence says", styles["h1"])]
     story.extend(
         [
@@ -957,6 +998,48 @@ def _executive_pages(
             _p("Attribution boundary", styles["h2"]),
             _p(
                 "These measurements characterize DigitalOcean’s serving route plus the named model. No identical external-provider control was used, so a quality or latency difference cannot be assigned uniquely to the base model, quantization, serving stack, or routing layer.",
+                styles["body"],
+            ),
+            PageBreak(),
+            _p("Production triage", styles["h1"]),
+            _callout(
+                "No heterogeneous mixed-load cell passed the full soak contract",
+                "The campaign measured all hosted endpoint × workload cells, but a completed measurement is not automatically a production pass. Mixed traffic should remain behind workload-matched canaries until its own two-minute acceptance, quality, and recovery criteria pass.",
+                styles,
+                warning=True,
+            ),
+            Spacer(1, 4 * mm),
+            _table(
+                [
+                    ["Decision lane", "Endpoints", "Evidence-backed action"],
+                    [
+                        "Guarded short/short pilot",
+                        endpoint_list(short_pilot_endpoints),
+                        "These exact 1 RPS cells passed the strict two-minute composite. Start below the measured point and revalidate; do not generalize to other shapes.",
+                    ],
+                    [
+                        "Hold tool-dependent traffic",
+                        endpoint_list(tool_hold_endpoints),
+                        "Matched tool probes were transport-degraded. Adjacent controls succeeded, so feature-gate tools rather than retrying blindly.",
+                    ],
+                    [
+                        "Functionally verified vision",
+                        endpoint_list(vision_verified_endpoints),
+                        "Only these routes both accepted the image request and passed the deterministic vision check in this campaign.",
+                    ],
+                    [
+                        "≈1M-token retrieval verified",
+                        endpoint_list(million_token_retrieval_endpoints),
+                        "Only this route recovered the embedded retrieval marker at roughly one million realized prompt tokens.",
+                    ],
+                ],
+                styles,
+                [39 * mm, 55 * mm, 75 * mm],
+            ),
+            Spacer(1, 5 * mm),
+            _p("How to interpret the red flags", styles["h2"]),
+            _p(
+                "A transport-degraded feature is an operational route failure for that exact request contract, not proof that the underlying model family lacks the feature everywhere. Likewise, HTTP acceptance at long context is weaker than correct retrieval. The endpoint profiles later in this report preserve the exact rate, workload, sample size, interval, and censoring state behind each decision.",
                 styles["body"],
             ),
             PageBreak(),
