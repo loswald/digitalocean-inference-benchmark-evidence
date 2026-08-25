@@ -2227,6 +2227,7 @@ def test_completion_reconciliation_uses_semantic_not_physical_payload_hash() -> 
         "coverage_tags": ["tool_calling"],
         "request_payload_sha256": "a" * 64,
         "campaign_plan_sha256": "b" * 64,
+        "requested_output_target": 64,
     }
     request = {
         "source_kind": "direct_completion",
@@ -2240,18 +2241,29 @@ def test_completion_reconciliation_uses_semantic_not_physical_payload_hash() -> 
         "rendered_payload_sha256": "a" * 64,
         "request_payload_sha256": "c" * 64,
         "campaign_plan_sha256": "b" * 64,
+        # Matched controls deliberately use a small, fixed output cap instead
+        # of the candidate cell's cap. That physical transport field must not
+        # orphan an otherwise hash-bound semantic control bracket.
+        "requested_output_target": 32,
     }
     matched, orphaned = reconcile_request_rows([plan], [request], [])
     assert not orphaned
     assert matched[0]["reconciliation_policy"] == (
         "strict_semantic_plan_contract_hashes"
     )
+    assert matched[0]["requested_output_target"] == 32
 
     bad = dict(request)
     bad["rendered_payload_sha256"] = "d" * 64
     matched, orphaned = reconcile_request_rows([plan], [bad], [])
     assert not matched
     assert orphaned[0]["orphan_reason"] == "rendered_payload_sha256_mismatch"
+
+    candidate = dict(request)
+    candidate["phase"] = "candidate_attempt"
+    matched, orphaned = reconcile_request_rows([plan], [candidate], [])
+    assert not matched
+    assert orphaned[0]["orphan_reason"] == "plan_requested_output_target_mismatch"
 
 
 def test_epoch_units_do_not_collapse_identical_ids_across_sources() -> None:

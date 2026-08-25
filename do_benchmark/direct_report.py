@@ -7500,7 +7500,11 @@ def reconcile_request_rows(
             if parent is not None:
                 plan_output = _integer(parent.get("requested_output_target"))
                 request_output = _integer(row.get("requested_output_target"))
-                if plan_output is not None:
+                is_matched_control_bracket = (
+                    source_kind == "direct_completion"
+                    and row.get("phase") in {"control_before", "control_after"}
+                )
+                if plan_output is not None and not is_matched_control_bracket:
                     if request_output is None:
                         row["requested_output_target"] = plan_output
                         row["requested_output_unit"] = "tokens"
