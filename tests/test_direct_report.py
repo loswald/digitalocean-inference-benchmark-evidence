@@ -495,6 +495,20 @@ def test_current_frozen_aimd_contract_does_not_require_legacy_reconciliation(
     assert fields["prior_conservative_exposure_usd"] == 179.0
     assert fields["cumulative_conservative_exposure_usd"] == 198.0
 
+    manifest["model_specs"].append(
+        asdict(MODEL_BY_ID["arcee-trinity-large-thinking"])
+    )
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    historical_fields = _source_cost_ledger_fields(
+        tmp_path,
+        expected_source_kind="direct_aimd",
+        required=True,
+        prefer_portable_reconciliation=True,
+    )
+    assert historical_fields["cost_basis"] == (
+        "source_terminal_summary_current_frozen_contract"
+    )
+
     manifest["model_specs"][0]["input_usd_per_million"] += 0.01
     (tmp_path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(DirectReportError, match="portable reconciliation is required"):

@@ -7558,7 +7558,13 @@ def _source_cost_ledger_fields(
                         contracts = {}
                         break
                     contracts[model_id] = value
-            current_contract = set(contracts) == EXPECTED_ENDPOINT_SET
+            # Historical AIMD manifests may include the now-quarantined Arcee
+            # endpoint.  They remain admissible only for exact cumulative-cost
+            # reconciliation; hosted performance estimands were filtered above.
+            current_contract = set(contracts) in {
+                EXPECTED_ENDPOINT_SET,
+                KNOWN_EVIDENCE_ENDPOINT_SET,
+            }
             for model_id, observed in contracts.items():
                 expected = MODEL_BY_ID.get(model_id)
                 current_contract = (
