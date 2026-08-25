@@ -5405,12 +5405,12 @@ def build_coverage(
             has_scope_exclusion = bool(exclusions)
             if not measurement_cells and has_scope_exclusion:
                 status = "untested"
-            elif statuses.get("inconclusive"):
-                status = "inconclusive"
             elif statuses.get("completed"):
                 status = "completed"
             elif statuses.get("unsupported"):
                 status = "unsupported"
+            elif statuses.get("inconclusive"):
+                status = "inconclusive"
             elif statuses.get("skipped"):
                 status = "skipped"
             else:
@@ -5424,6 +5424,14 @@ def build_coverage(
                     "observed_attempt_count": sum(
                         int(row.get("observed_attempt_count") or 0)
                         for row in measurement_cells
+                    ),
+                    "completed_subcell_count": statuses.get("completed", 0),
+                    "unsupported_subcell_count": statuses.get("unsupported", 0),
+                    "inconclusive_subcell_count": statuses.get("inconclusive", 0),
+                    "skipped_subcell_count": statuses.get("skipped", 0),
+                    "superseded_subcell_count": statuses.get("superseded", 0),
+                    "replicate_failure_subcell_count": statuses.get(
+                        "replicate_failure_observed", 0
                     ),
                     "explicit_untested_subtest_count": len(exclusions),
                     "has_explicit_scope_exclusions": has_scope_exclusion,
@@ -5446,8 +5454,11 @@ def build_coverage(
             "matrix_scope": "broad_endpoint_by_dimension",
             "explicit_scope_exclusion_count": len(scope_exclusions),
             "coverage_claim": (
-                "Broad endpoint-by-dimension coverage; named zero-attempt subtests "
-                "remain visible and are not implied complete"
+                "Broad endpoint-by-dimension coverage. A completed exact subcell "
+                "establishes that the dimension was exercised; unsupported, "
+                "inconclusive, skipped, superseded, failed-replicate, and named "
+                "zero-attempt subtests remain separately counted and are not "
+                "implied successful."
             ),
         },
     )
@@ -6435,7 +6446,16 @@ def validate_public_analysis_contract(
         status = str(row.get("status") or "")
         if status not in allowed_coverage_statuses:
             errors.append(f"coverage_matrix[{index}].status is invalid")
-        for key in ("planned_cell_or_epoch_count", "observed_attempt_count"):
+        for key in (
+            "planned_cell_or_epoch_count",
+            "observed_attempt_count",
+            "completed_subcell_count",
+            "unsupported_subcell_count",
+            "inconclusive_subcell_count",
+            "skipped_subcell_count",
+            "superseded_subcell_count",
+            "replicate_failure_subcell_count",
+        ):
             if _integer(row.get(key)) is None:
                 errors.append(
                     f"coverage_matrix[{index}].{key} must be a non-negative integer"

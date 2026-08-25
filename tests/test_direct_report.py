@@ -854,6 +854,54 @@ def test_exact_matched_control_retry_supersedes_old_unpaired_probe() -> None:
     assert status == "unsupported"
 
 
+def test_broad_coverage_keeps_inconclusive_subcells_without_poisoning_completion() -> None:
+    endpoint = DEEPSEEK_ENDPOINT_ID
+    plans = [
+        {
+            "source_kind": "direct_breadth",
+            "source_id": "capabilities",
+            "endpoint_id": endpoint,
+            "cell_id": cell_id,
+            "workload": "parameter_validation",
+            "shape": "capability_envelope",
+            "planned_attempt_count": 1,
+        }
+        for cell_id in ("completed", "failed")
+    ]
+    requests = [
+        {
+            "source_kind": "direct_breadth",
+            "source_id": "capabilities",
+            "endpoint_id": endpoint,
+            "cell_id": "completed",
+            "coverage_conclusive": True,
+            "transport_success": True,
+            "status": "success",
+        },
+        {
+            "source_kind": "direct_breadth",
+            "source_id": "capabilities",
+            "endpoint_id": endpoint,
+            "cell_id": "failed",
+            "coverage_conclusive": False,
+            "transport_success": False,
+            "status": "timeout",
+        },
+    ]
+    ledger, matrix, _ = build_coverage(plans, requests, [])
+    assert {row["status"] for row in ledger} == {"completed", "inconclusive"}
+    row = next(
+        item
+        for item in matrix
+        if item["endpoint_id"] == endpoint
+        and item["coverage_dimension"] == "parameter_validation"
+    )
+    assert row["status"] == "completed"
+    assert row["completed_subcell_count"] == 1
+    assert row["inconclusive_subcell_count"] == 1
+    assert row["unsupported_subcell_count"] == 0
+
+
 def test_zero_quality_score_is_a_scored_failure_not_missing_evidence() -> None:
     raw = _breadth_record(cell_id="quality-zero", family="short_short")
     raw.update(
