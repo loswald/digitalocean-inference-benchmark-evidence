@@ -29,9 +29,10 @@ from do_benchmark.core import (
     BenchmarkTask,
     JsonlJournal,
     MODEL_BY_ID,
-    MODEL_SPECS,
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
     ModelSpec,
     StreamResult,
+    require_digitalocean_hosted_models,
     _context_task,
     _controlled_output_task,
     canonical_json,
@@ -95,6 +96,7 @@ class DirectConfig:
         unknown = sorted(set(self.model_ids) - MODEL_BY_ID.keys())
         if unknown:
             raise ValueError(f"unknown DigitalOcean models: {', '.join(unknown)}")
+        require_digitalocean_hosted_models(self.model_ids)
         if not self.model_ids:
             raise ValueError("at least one model is required")
         if self.epoch_seconds <= 0:
@@ -2216,4 +2218,4 @@ class DirectAIMDCampaign:
 
 
 def default_model_ids() -> tuple[str, ...]:
-    return tuple(spec.model_id for spec in MODEL_SPECS)
+    return DIGITALOCEAN_HOSTED_MODEL_IDS

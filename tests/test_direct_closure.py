@@ -15,7 +15,7 @@ from do_benchmark.direct_closure import (
 from do_benchmark.direct_report import analyze_and_write, load_matched_closure_directory
 
 
-MODEL = "arcee-trinity-large-thinking"
+MODEL = "deepseek-v4-flash-0731"
 
 
 def _targets(path: Path) -> Path:

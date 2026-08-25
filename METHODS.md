@@ -19,8 +19,18 @@ endpoint-isolated AIMD, two-minute soaks, capability behavior, context
 acceptance/retrieval, and targeted completion cells. The final measurement
 window ended on 24 August 2026.
 
+The production scope is now the 11 identifiers in DigitalOcean's documented
+"DigitalOcean-Hosted Models" table. `arcee-trinity-large-thinking` was
+mistakenly included in the original 12-model campaign even though DigitalOcean
+lists it in a separate Arcee partner-model section. Its 3,210 historical rows
+remain immutable for reconciliation, but are excluded from hosted-only charts,
+portfolio KPIs, recommendations, and all future provider sends. Spend-bearing
+runners now reject any identifier outside the hosted-only allowlist before
+network access.
+
 The direct campaigns shared a $400 cumulative exposure cap. The final
-conservative ledger was $237.358277971. Endpoint-isolated capacity work never
+conservative ledger was $237.487594171 after sealing the interrupted access
+incident. Endpoint-isolated capacity work never
 overlapped another provider workload. The context runner used one sequential
 chain per endpoint and ran those chains concurrently behind an account-wide
 RPM/TPM governor; those context timings are diagnostic only and are not reported
@@ -28,10 +38,12 @@ as isolated endpoint latency. Unequal endpoint latency, transport failures,
 budget guards, and finite windows produced unequal coverage; missing and
 inconclusive cells remain visible.
 
-The strict evidence matrix is `12 endpoints × 16 dimensions = 192 cells`.
+The hosted-only evidence matrix is `11 endpoints × 16 dimensions = 176 cells`.
 A cell is resolved only when its dimension-specific evidence rule passes or an
 exact, evidence-backed unsupported result exists. The final matrix contains 97
-completed cells, 8 unsupported cells, and 87 inconclusive cells. Therefore this
+completed cells, 8 unsupported cells, and 87 inconclusive cells before the
+partner-model exclusion; the hosted-only view contains 88 completed, 7
+unsupported, and 81 inconclusive cells. Therefore this
 repository is an incomplete-evidence report, not a complete endpoint
 certification.
 
@@ -138,6 +150,28 @@ phrase **met the benchmark's confirmation rule at _x_ requests/second**. It does
 not by itself support **sustainable**, **production-ready**, or a recommended
 production ceiling. The former 70% headroom value is an unvalidated heuristic
 and is not a measured operating recommendation.
+
+## Matched-control closure
+
+An unresolved capability probe is retried as an endpoint-local sequence:
+
+```text
+known-good control before → exact capability probe → known-good control after
+```
+
+Only the semantic probe contributes capability evidence. Controls establish
+that the same route was operational around the probe. An exact 400/413/422 can
+support a route/API-specific rejection only when both controls pass. A 401/403,
+402, timeout, 429, or 5xx response never proves that a model lacks the tested
+capability. Repeated provider failures may become conclusive reliability
+observations, but capability status remains inconclusive.
+
+The late closure wave was stopped after inference calls returned 403 while the
+prepaid balance was depleted. Its 52 physical attempts remain in cost and
+reliability accounting, while its 12 terminal semantic cells add zero
+capability claims. After the balance was replenished, the same credential again
+returned HTTP 200 from `/v1/models`; the separate account-control API remained
+403 and is not used as the inference-readiness gate.
 
 ## Attribution
 

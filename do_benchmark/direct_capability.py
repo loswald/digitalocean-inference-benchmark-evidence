@@ -35,12 +35,14 @@ from do_benchmark.core import (
     MODEL_BY_ID,
     MODEL_DOC_VERIFIED_DATE,
     MODEL_SPECS,
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
     PRICING_DOC_DATE,
     BenchmarkTask,
     JsonlJournal,
     ModelSpec,
     ProviderHTTPError,
     StreamResult,
+    require_digitalocean_hosted_models,
     canonical_json,
     parse_token_usage,
     quadrant_png_data_uri,
@@ -191,6 +193,7 @@ class CapabilityConfig:
         unknown = sorted(set(self.model_ids) - MODEL_BY_ID.keys())
         if unknown:
             raise ValueError(f"unknown DigitalOcean models: {', '.join(unknown)}")
+        require_digitalocean_hosted_models(self.model_ids)
         if len(set(self.model_ids)) != len(self.model_ids):
             raise ValueError("model IDs must be unique")
         if self.max_workers < 1 or self.per_model_concurrency < 1:
@@ -2998,4 +3001,4 @@ class DirectCapabilityCampaign:
 
 
 def default_model_ids() -> tuple[str, ...]:
-    return tuple(spec.model_id for spec in MODEL_SPECS)
+    return DIGITALOCEAN_HOSTED_MODEL_IDS

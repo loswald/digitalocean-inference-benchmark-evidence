@@ -30,10 +30,12 @@ from do_benchmark.core import (
     MODEL_BY_ID,
     MODEL_DOC_VERIFIED_DATE,
     MODEL_SPECS,
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
     PRICING_DOC_DATE,
     BenchmarkTask,
     JsonlJournal,
     StreamResult,
+    require_digitalocean_hosted_models,
     canonical_json,
     score_result,
     stream_chat_completion,
@@ -277,6 +279,7 @@ class ContextConfig:
         unknown = sorted(set(self.model_ids) - MODEL_BY_ID.keys())
         if unknown:
             raise ValueError(f"unknown DigitalOcean models: {', '.join(unknown)}")
+        require_digitalocean_hosted_models(self.model_ids)
         for model_id in self.model_ids:
             _validate_model_contract_against_freeze(model_id)
         if len(set(self.model_ids)) != len(self.model_ids):
@@ -2525,4 +2528,4 @@ class DirectContextCampaign:
 
 
 def default_model_ids() -> tuple[str, ...]:
-    return tuple(spec.model_id for spec in MODEL_SPECS)
+    return DIGITALOCEAN_HOSTED_MODEL_IDS

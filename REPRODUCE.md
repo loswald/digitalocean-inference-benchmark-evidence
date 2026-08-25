@@ -36,6 +36,7 @@ scripts/run-digitalocean-direct-soak.py
 scripts/run-digitalocean-direct-capability.py
 scripts/run-digitalocean-direct-context.py
 scripts/run-digitalocean-direct-completion.py
+scripts/run-digitalocean-matched-closure.py
 ```
 
 Example no-send capacity plan:
@@ -83,8 +84,9 @@ python scripts/analyze-direct-public-report.py \
   --aimd-dir /evidence/aimd \
   --soak-dir /evidence/soak \
   --completion-dir /evidence/completion \
+  --closure-dir /evidence/matched-closure \
   --output-dir build/analysis \
-  --bootstrap-replicates 10000 \
+  --bootstrap-replicates 2000 \
   --publication-mode draft
 ```
 
@@ -97,7 +99,20 @@ public bundle itself supports checksum, schema, contract, table, and PDF
 verification from its sanitized canonical analysis and derived tables, but it
 does not pretend to reconstruct private source journals that are not shipped.
 
-Build the PDF from a newly generated analysis:
+Build the concise engineering encyclopedia from a newly generated analysis:
+
+```bash
+python scripts/build-digitalocean-encyclopedia.py \
+  --artifacts build/analysis \
+  --output build/DigitalOcean-Inference-Engineering-Encyclopedia-August-2026.pdf
+```
+
+The older long-form builder remains available for forensic comparison, but it
+is not the primary engineering handoff. The encyclopedia uses matched workload
+small multiples, explicit missing/censored cells, a deterministic timing
+outlier audit, and per-endpoint operating tables.
+
+Build the legacy detailed PDF only when needed:
 
 ```bash
 python scripts/build-direct-public-report-pdf.py \

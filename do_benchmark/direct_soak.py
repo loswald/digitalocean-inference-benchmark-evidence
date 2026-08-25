@@ -39,9 +39,10 @@ from do_benchmark.core import (
     BenchmarkTask,
     JsonlJournal,
     MODEL_BY_ID,
-    MODEL_SPECS,
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
     ModelSpec,
     StreamResult,
+    require_digitalocean_hosted_models,
     canonical_json,
     parse_token_usage,
     percentile,
@@ -209,6 +210,7 @@ class SoakConfig:
         unknown = sorted(set(self.model_ids) - MODEL_BY_ID.keys())
         if unknown:
             raise ValueError(f"unknown DigitalOcean models: {', '.join(unknown)}")
+        require_digitalocean_hosted_models(self.model_ids)
         if not self.model_ids:
             raise ValueError("at least one model is required")
         if len(set(self.model_ids)) != len(self.model_ids):
@@ -3760,4 +3762,4 @@ class DirectSoakCampaign:
 
 
 def default_model_ids() -> tuple[str, ...]:
-    return tuple(spec.model_id for spec in MODEL_SPECS)
+    return DIGITALOCEAN_HOSTED_MODEL_IDS

@@ -23,10 +23,11 @@ import httpx
 
 from do_benchmark.core import (
     MODEL_BY_ID,
-    MODEL_SPECS,
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
     BenchmarkTask,
     JsonlJournal,
     StreamResult,
+    require_digitalocean_hosted_models,
     canonical_json,
     parse_token_usage,
     score_result,
@@ -75,6 +76,7 @@ class ClosureConfig:
         unknown = sorted(set(self.model_ids) - MODEL_BY_ID.keys())
         if unknown:
             raise ValueError(f"unknown model IDs: {unknown}")
+        require_digitalocean_hosted_models(self.model_ids)
         if not 0 <= self.prior_cost_usd <= self.max_cost_usd:
             raise ValueError("invalid cumulative cost envelope")
         if self.max_model_parallelism < 1 or self.max_attempts < 1:
@@ -825,4 +827,4 @@ class MatchedClosureCampaign:
 
 
 def default_model_ids() -> tuple[str, ...]:
-    return tuple(spec.model_id for spec in MODEL_SPECS)
+    return DIGITALOCEAN_HOSTED_MODEL_IDS

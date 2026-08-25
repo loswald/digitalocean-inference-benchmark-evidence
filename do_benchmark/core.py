@@ -84,6 +84,40 @@ MODEL_SPECS: tuple[ModelSpec, ...] = (
 
 MODEL_BY_ID = {spec.model_id: spec for spec in MODEL_SPECS}
 
+# DigitalOcean's current model documentation places Arcee Trinity in a
+# separate partner-model section, not in the "DigitalOcean-Hosted Models"
+# table.  Startup/Hatch-style credits exclude third-party inference hosted
+# outside DigitalOcean infrastructure, so all spend-bearing defaults and
+# explicit selections fail closed to this audited hosted-only allowlist.
+DIGITALOCEAN_HOSTED_MODEL_IDS: tuple[str, ...] = (
+    "deepseek-v4-flash-0731",
+    "gemma-4-31B-it",
+    "glm-5.2",
+    "kimi-k3",
+    "minimax-m2.5",
+    "mimo-v2.5-pro",
+    "nemotron-3-ultra-550b",
+    "nvidia-nemotron-3-super-120b",
+    "openai-gpt-oss-120b",
+    "qwen3.8-max",
+    "qwen3.5-397b-a17b",
+)
+DIGITALOCEAN_HOSTED_MODEL_ID_SET = frozenset(DIGITALOCEAN_HOSTED_MODEL_IDS)
+DIGITALOCEAN_HOSTED_MODEL_SPECS: tuple[ModelSpec, ...] = tuple(
+    MODEL_BY_ID[model_id] for model_id in DIGITALOCEAN_HOSTED_MODEL_IDS
+)
+
+
+def require_digitalocean_hosted_models(model_ids: Sequence[str]) -> None:
+    """Reject any model outside DigitalOcean's documented hosted-model table."""
+
+    non_hosted = sorted(set(model_ids) - DIGITALOCEAN_HOSTED_MODEL_ID_SET)
+    if non_hosted:
+        raise ValueError(
+            "non-DigitalOcean-hosted models are forbidden by the credits-only "
+            f"benchmark scope: {', '.join(non_hosted)}"
+        )
+
 
 @dataclass
 class BenchmarkTask:
@@ -1294,8 +1328,9 @@ def choose_models(model_ids: Sequence[str] | None) -> list[ModelSpec]:
         unknown = sorted(set(model_ids) - MODEL_BY_ID.keys())
         if unknown:
             raise ValueError(f"unknown model ids: {', '.join(unknown)}")
+        require_digitalocean_hosted_models(model_ids)
         return [MODEL_BY_ID[model_id] for model_id in model_ids]
-    return list(MODEL_SPECS)
+    return list(DIGITALOCEAN_HOSTED_MODEL_SPECS)
 
 
 def read_records(path: Path) -> list[dict[str, Any]]:

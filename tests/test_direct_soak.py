@@ -559,7 +559,7 @@ def test_transport_gate_is_execution_terminal_but_science_incomplete(tmp_path) -
     )
 
 
-def test_plan_only_all_12_has_no_credential_dependency(tmp_path) -> None:
+def test_plan_only_all_hosted_11_has_no_credential_dependency(tmp_path) -> None:
     source = tmp_path / "aimd"
     _aimd_fixture(source, model_ids=default_model_ids(), rate_rps=1.0)
     output = tmp_path / "plan"
@@ -597,8 +597,8 @@ def test_plan_only_all_12_has_no_credential_dependency(tmp_path) -> None:
     result = json.loads(completed.stdout)
     assert result["credentials_loaded"] is False
     assert result["billable_requests_sent"] == 0
-    assert result["preflight"]["target_cell_count"] == 48
-    assert result["preflight"]["ready_cell_count"] == 48
+    assert result["preflight"]["target_cell_count"] == 44
+    assert result["preflight"]["ready_cell_count"] == 44
     assert result["preflight"]["planned_request_count"] > 0
     assert result["preflight"]["passes"] is True
 

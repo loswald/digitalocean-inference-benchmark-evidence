@@ -1,6 +1,6 @@
 # DigitalOcean Inference Endpoint Benchmark
 
-An independent, request-level benchmark of 12 public DigitalOcean Serverless
+An independent, request-level benchmark of 11 DigitalOcean-hosted Serverless
 Inference endpoints, measured on 23–24 August 2026. The study covers low-load
 latency, open-loop AIMD capacity probes, two-minute offered-load soaks, short
 and long inputs, short and long outputs, mixed workloads, recovery, tools,
@@ -12,9 +12,17 @@ This repository is not affiliated with or endorsed by DigitalOcean.
 ## Bottom line
 
 **This is useful evidence, but it is not a complete certification of the
-portfolio.** The strict publication matrix resolves 105 of 192 planned
-endpoint-by-dimension cells (54.7%): 97 completed, 8 evidence-backed
-unsupported, and 87 inconclusive. Every unresolved cell remains visible.
+portfolio.** The hosted-only publication matrix resolves 95 of 176 planned
+endpoint-by-dimension cells (54.0%): 88 completed, 7 evidence-backed
+unsupported, and 81 inconclusive. Every unresolved cell remains visible.
+
+**Current inference access: restored after prepayment.** On 24 August, the
+authorized inference credential began returning HTTP 403 as the Serverless
+Inference balance was depleted. After the owner replenished the balance on
+25 August, the same credential again returned HTTP 200 from `/v1/models`.
+The main account-control API still returns 403, but it is a separate surface
+and is not the inference-readiness gate. Run two cheap serial marker controls
+before production onboarding or a new load wave.
 
 Only three exact endpoint/workload/rate combinations passed the benchmark's
 strict two-minute soak rule:
@@ -32,6 +40,9 @@ a passing operating point.
 
 ### Action for engineers
 
+- Keep a positive Serverless Inference prepaid balance and pass two serial
+  streamed marker controls. A failed 401/403 control stops the lane; it is not
+  a capability result.
 - Treat the three 60-RPM results as narrow passing observations, not production
   recommendations. Start below the tested point, enforce your own latency and
   quality SLOs, and ramp with an adaptive controller.
@@ -49,7 +60,12 @@ a passing operating point.
 
 ## What was actually run
 
-- **12 exact DigitalOcean-hosted model IDs** and four load shapes per endpoint.
+- **11 exact DigitalOcean-hosted model IDs** and four load shapes per endpoint.
+- A twelfth historical endpoint, `arcee-trinity-large-thinking`, was selected
+  in error. DigitalOcean documents it outside the hosted-model table, so its
+  3,210 rows and approximately $9.4861 of token-attributed usage are retained
+  only in the incident appendix and excluded from production comparisons and
+  every future spend-bearing default.
 - **10,685 requests in the fresh endpoint-isolated AIMD campaign:** 10,332
   HTTP 200 and 353 HTTP 429; no 402, 5xx, or timeout in that campaign.
 - **532 capacity-valid AIMD epochs.** Twenty-two of 48 fresh endpoint/shape
@@ -64,13 +80,16 @@ a passing operating point.
 - **180 fixed context probes plus adaptive refinements** across all endpoints.
 - **304 completion/closure probes**, of which 61 were conclusive under the
   strict analysis contract.
-- **$237.3583 conservative cumulative exposure** under a $400 campaign cap.
+- **52 additional matched-closure physical attempts** during the access
+  incident: 32 HTTP 403, 4 HTTP 500, and 16 HTTP 503. Twelve semantic cells
+  reached a terminal inconclusive state; none became a support/rejection claim.
+- **$237.4876 conservative cumulative exposure** under a $400 campaign cap.
   This is an experiment ledger, not a DigitalOcean invoice or proof of credit
   application.
 
 ## Start here
 
-- [Evidence report PDF](report/DigitalOcean-Inference-Endpoint-Benchmark-August-2026.pdf)
+- [Engineering encyclopedia PDF](report/DigitalOcean-Inference-Engineering-Encyclopedia-August-2026.pdf)
 - [Methods and definitions](METHODS.md)
 - [Reproduction guide](REPRODUCE.md)
 - [Results guide](results/README.md)

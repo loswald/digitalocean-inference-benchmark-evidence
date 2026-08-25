@@ -9,7 +9,12 @@ from pathlib import Path
 import pytest
 
 import do_benchmark.direct_context as direct_context
-from do_benchmark.core import MODEL_SPECS, ProviderHTTPError, StreamResult
+from do_benchmark.core import (
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
+    MODEL_SPECS,
+    ProviderHTTPError,
+    StreamResult,
+)
 from do_benchmark.direct_context import (
     AccountQuotaGovernor,
     CONTEXT_PERCENTAGES,
@@ -81,13 +86,13 @@ def _config(tmp_path, **overrides) -> ContextConfig:
     return ContextConfig(**values)
 
 
-def test_fixed_design_covers_all_12_models_and_required_anchors() -> None:
-    model_ids = tuple(spec.model_id for spec in MODEL_SPECS)
+def test_fixed_design_covers_all_hosted_11_models_and_required_anchors() -> None:
+    model_ids = DIGITALOCEAN_HOSTED_MODEL_IDS
     probes = build_context_probes(model_ids)
-    assert len(model_ids) == 12
-    assert len(probes) == 15 * 12
-    for spec in MODEL_SPECS:
-        rows = [probe for probe in probes if probe.model_id == spec.model_id]
+    assert len(model_ids) == 11
+    assert len(probes) == 15 * 11
+    for model_id in model_ids:
+        rows = [probe for probe in probes if probe.model_id == model_id]
         observed_percentages = {
             percentage for probe in rows for percentage in probe.anchor_percentages
         }
@@ -95,7 +100,7 @@ def test_fixed_design_covers_all_12_models_and_required_anchors() -> None:
         assert observed_percentages == set(CONTEXT_PERCENTAGES)
         prefix = (
             "undocumented_probe_anchor"
-            if spec.model_id == "kimi-k3"
+            if model_id == "kimi-k3"
             else "advertised_context"
         )
         assert {
@@ -393,13 +398,13 @@ def test_model_lanes_overlap_but_each_model_chain_is_sequential(tmp_path) -> Non
 
     config = _config(
         tmp_path,
-        model_ids=("openai-gpt-oss-120b", "arcee-trinity-large-thinking"),
+        model_ids=("openai-gpt-oss-120b", "gemma-4-31B-it"),
     )
     asyncio.run(DirectContextCampaign(config).run(executor))
     assert maximum_active_total >= 2
     assert maximum_by_model == {
         "openai-gpt-oss-120b": 1,
-        "arcee-trinity-large-thinking": 1,
+        "gemma-4-31B-it": 1,
     }
 
 
@@ -464,7 +469,7 @@ def test_preflight_sums_worst_simultaneously_runnable_model_reservations(
 ) -> None:
     config = ContextConfig(
         output_dir=tmp_path,
-        model_ids=tuple(spec.model_id for spec in MODEL_SPECS),
+        model_ids=DIGITALOCEAN_HOSTED_MODEL_IDS,
         prior_cost_usd=21.438454073,
         max_cost_usd=200.0,
         max_bisection_rounds=8,
@@ -608,21 +613,21 @@ def test_deadline_and_http_402_latch_stop_new_provider_sends(tmp_path) -> None:
 def test_plan_preflight_reports_honest_cost_and_timeout_bounds(tmp_path) -> None:
     config = ContextConfig(
         output_dir=tmp_path,
-        model_ids=tuple(spec.model_id for spec in MODEL_SPECS),
+        model_ids=DIGITALOCEAN_HOSTED_MODEL_IDS,
         per_model_concurrency=1,
         request_timeout_seconds=180.0,
     )
     campaign = DirectContextCampaign(config)
     assert campaign.full_plan_guaranteed_to_fit_budget is False
-    assert campaign.parallel_timeout_only_projection_seconds == 7_560
+    assert campaign.parallel_timeout_only_projection_seconds == 7_380
     assert campaign.first_calibration_header_projection_seconds == 5_760
-    assert campaign.serialized_configured_timeout_sum_seconds == 66_960
+    assert campaign.serialized_configured_timeout_sum_seconds == 61_380
     manifest = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))
-    assert manifest["maximum_total_requests"] == 372
+    assert manifest["maximum_total_requests"] == 341
     assert manifest["full_plan_guaranteed_to_fit_budget"] is False
-    assert manifest["parallel_timeout_only_projection_seconds"] == 7_560
+    assert manifest["parallel_timeout_only_projection_seconds"] == 7_380
     assert manifest["first_calibration_header_timeout_projection_seconds"] == 5_760
-    assert manifest["serialized_configured_timeout_sum_seconds"] == 66_960
+    assert manifest["serialized_configured_timeout_sum_seconds"] == 61_380
     assert "not a wall-clock hard bound" in manifest["timeout_bound_contract"]
     assert manifest["quota_governor_wait_upper_bound_seconds"] is None
 
@@ -854,7 +859,7 @@ def test_bootstrap_is_serial_until_request_and_tpm_limits_are_observed(
 ) -> None:
     models = (
         "openai-gpt-oss-120b",
-        "arcee-trinity-large-thinking",
+        "gemma-4-31B-it",
         "deepseek-v4-flash-0731",
     )
     calls: list[str] = []

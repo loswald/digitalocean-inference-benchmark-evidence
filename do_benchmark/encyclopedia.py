@@ -35,7 +35,12 @@ from reportlab.platypus import (
     TableStyle,
 )
 
+from .core import DIGITALOCEAN_HOSTED_MODEL_IDS
 from .direct_report import EXPECTED_ENDPOINT_IDS
+
+
+REPORT_ENDPOINT_IDS = DIGITALOCEAN_HOSTED_MODEL_IDS
+EXCLUDED_PARTNER_MODEL_ID = "arcee-trinity-large-thinking"
 
 
 NAVY = "#0B1F33"
@@ -144,6 +149,7 @@ def load_bundle(root: Path) -> Bundle:
         "observed-limits.csv",
         "metric-audit.csv",
         "endpoint-workload-metrics.csv",
+        "normalized-requests.csv",
     )
     rows = {name: _read_csv(root / name) for name in names}
     analysis_path = root / "analysis.json"
@@ -474,7 +480,7 @@ def _best_capacity_rows(bundle: Bundle) -> dict[tuple[str, str], Mapping[str, st
     grouped: dict[tuple[str, str], list[Mapping[str, str]]] = defaultdict(list)
     for row in bundle.rows["capacity-summary.csv"]:
         endpoint, shape = row.get("endpoint_id"), row.get("shape")
-        if endpoint in EXPECTED_ENDPOINT_IDS and shape in {key for key, _ in SHAPES}:
+        if endpoint in REPORT_ENDPOINT_IDS and shape in {key for key, _ in SHAPES}:
             grouped[(str(endpoint), str(shape))].append(row)
     selected: dict[tuple[str, str], Mapping[str, str]] = {}
     for key, rows in grouped.items():
@@ -559,11 +565,11 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
     fig, axes = plt.subplots(1, 4, figsize=(14, 7.2), sharey=True)
     for ax, (shape, label) in zip(axes, SHAPES):
         values = []
-        for endpoint in EXPECTED_ENDPOINT_IDS:
+        for endpoint in REPORT_ENDPOINT_IDS:
             row = capacity.get((endpoint, shape), {})
             rpm = _num(row.get("capacity_lower_bound_rpm"))
             values.append(rpm)
-        y = list(range(len(EXPECTED_ENDPOINT_IDS)))
+        y = list(range(len(REPORT_ENDPOINT_IDS)))
         ax.scatter(
             [value or math.nan for value in values], y, color=BLUE, s=34, zorder=3
         )
@@ -575,8 +581,8 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
         ax.set_xlabel("offered RPM\n(confirmed lower bound)")
         ax.spines[["top", "right", "left"]].set_visible(False)
         ax.grid(axis="y", visible=False)
-    axes[0].set_yticks(range(len(EXPECTED_ENDPOINT_IDS)))
-    axes[0].set_yticklabels([_short(endpoint) for endpoint in EXPECTED_ENDPOINT_IDS])
+    axes[0].set_yticks(range(len(REPORT_ENDPOINT_IDS)))
+    axes[0].set_yticklabels([_short(endpoint) for endpoint in REPORT_ENDPOINT_IDS])
     fig.suptitle(
         "AIMD healthy offered-rate lower bounds — matched workload cells",
         x=0.02,
@@ -589,7 +595,7 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
 
     fig, axes = plt.subplots(1, 4, figsize=(14, 7.2), sharey=True)
     for ax, (shape, label) in zip(axes, SHAPES):
-        for yi, endpoint in enumerate(EXPECTED_ENDPOINT_IDS):
+        for yi, endpoint in enumerate(REPORT_ENDPOINT_IDS):
             row = soak.get((endpoint, shape))
             if not row:
                 continue
@@ -612,8 +618,8 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
         ax.set_xlabel("successful RPM\n(2-minute block mean, 95% CI)")
         ax.spines[["top", "right", "left"]].set_visible(False)
         ax.grid(axis="y", visible=False)
-    axes[0].set_yticks(range(len(EXPECTED_ENDPOINT_IDS)))
-    axes[0].set_yticklabels([_short(endpoint) for endpoint in EXPECTED_ENDPOINT_IDS])
+    axes[0].set_yticks(range(len(REPORT_ENDPOINT_IDS)))
+    axes[0].set_yticklabels([_short(endpoint) for endpoint in REPORT_ENDPOINT_IDS])
     fig.suptitle(
         "Two-minute achieved goodput at the tested candidate rate",
         x=0.02,
@@ -653,7 +659,7 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
     ):
         fig, axes = plt.subplots(1, 4, figsize=(14, 7.2), sharey=True)
         for ax, (shape, label) in zip(axes, SHAPES):
-            for yi, endpoint in enumerate(EXPECTED_ENDPOINT_IDS):
+            for yi, endpoint in enumerate(REPORT_ENDPOINT_IDS):
                 row = capacity.get((endpoint, shape))
                 if not row:
                     continue
@@ -676,9 +682,9 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
                 )
             ax.spines[["top", "right", "left"]].set_visible(False)
             ax.grid(axis="y", visible=False)
-        axes[0].set_yticks(range(len(EXPECTED_ENDPOINT_IDS)))
+        axes[0].set_yticks(range(len(REPORT_ENDPOINT_IDS)))
         axes[0].set_yticklabels(
-            [_short(endpoint) for endpoint in EXPECTED_ENDPOINT_IDS]
+            [_short(endpoint) for endpoint in REPORT_ENDPOINT_IDS]
         )
         fig.suptitle(title, x=0.02, ha="left", fontsize=13, fontweight="bold")
         fig.subplots_adjust(wspace=0.2, left=0.2)
@@ -692,8 +698,8 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
         if row.get("dimension") == "prompt context window":
             limits[str(row.get("endpoint_id"))].append(row)
     fig, ax = plt.subplots(figsize=(10, 6.3))
-    y = list(range(len(EXPECTED_ENDPOINT_IDS)))
-    for yi, endpoint in enumerate(EXPECTED_ENDPOINT_IDS):
+    y = list(range(len(REPORT_ENDPOINT_IDS)))
+    for yi, endpoint in enumerate(REPORT_ENDPOINT_IDS):
         documented = _num(inventory[endpoint].get("context_window"))
         functional = max(
             (
@@ -715,7 +721,7 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
                 )
     _configure_log_x(ax)
     ax.set_yticks(y)
-    ax.set_yticklabels([_short(endpoint) for endpoint in EXPECTED_ENDPOINT_IDS])
+    ax.set_yticklabels([_short(endpoint) for endpoint in REPORT_ENDPOINT_IDS])
     ax.set_xlabel("Tokens (log scale)")
     ax.set_title(
         "Documented context versus highest retrieval-valid prompt observed", loc="left"
@@ -763,6 +769,14 @@ def _coverage_counts(bundle: Bundle, endpoint: str | None = None) -> Counter[str
     return Counter(str(row.get("status")) for row in rows)
 
 
+def _portfolio_coverage_counts(bundle: Bundle) -> Counter[str]:
+    return Counter(
+        str(row.get("status"))
+        for row in bundle.rows["coverage-matrix.csv"]
+        if row.get("endpoint_id") in REPORT_ENDPOINT_IDS
+    )
+
+
 def _capability_rows(bundle: Bundle, endpoint: str) -> list[Mapping[str, str]]:
     rows = [
         row
@@ -788,13 +802,18 @@ def _limit_rows(bundle: Bundle, endpoint: str) -> list[Mapping[str, str]]:
 
 
 def _cover(styles: Mapping[str, ParagraphStyle], bundle: Bundle) -> Flowable:
-    coverage = _coverage_counts(bundle)
+    coverage = _portfolio_coverage_counts(bundle)
     cost = bundle.analysis.get("cost_summary", {})
-    matrix = bundle.rows["coverage-matrix.csv"]
+    matrix = tuple(
+        row
+        for row in bundle.rows["coverage-matrix.csv"]
+        if row.get("endpoint_id") in REPORT_ENDPOINT_IDS
+    )
     complete = coverage.get("completed", 0) + coverage.get("unsupported", 0)
     request_rows = sum(
         _integer(row.get("request_count")) or 0
         for row in bundle.rows["endpoint-summary.csv"]
+        if row.get("endpoint_id") in REPORT_ENDPOINT_IDS
     )
     body = [
         Spacer(1, 28 * mm),
@@ -803,13 +822,13 @@ def _cover(styles: Mapping[str, ParagraphStyle], bundle: Bundle) -> Flowable:
         _p("Engineering encyclopedia", styles["title"]),
         Spacer(1, 4 * mm),
         _p(
-            "A request-level technical benchmark of 12 hosted endpoints across latency, throughput, context, output, tools, structured output, vision, quality, overload, and recovery. Engineering draft: current account access must be restored before production onboarding.",
+            "A request-level technical benchmark of 11 DigitalOcean-hosted endpoints across latency, throughput, context, output, tools, structured output, vision, quality, overload, and recovery. A historical partner-model mistake is isolated in an incident appendix and excluded from production comparisons.",
             styles["subtitle"],
         ),
         Spacer(1, 18 * mm),
         _kpis(
             [
-                (f"{len(EXPECTED_ENDPOINT_IDS)}", "FROZEN ENDPOINTS"),
+                (f"{len(REPORT_ENDPOINT_IDS)}", "DO-HOSTED ENDPOINTS"),
                 (f"{request_rows:,}", "NORMALIZED REQUESTS"),
                 (f"{complete}/{len(matrix)}", "CONCLUSIVE COVERAGE CELLS"),
                 (
@@ -842,14 +861,16 @@ def _cover(styles: Mapping[str, ParagraphStyle], bundle: Bundle) -> Flowable:
 def _executive_pages(
     styles: Mapping[str, ParagraphStyle], bundle: Bundle, charts: Sequence[Path]
 ) -> list[Flowable]:
-    coverage = _coverage_counts(bundle)
+    coverage = _portfolio_coverage_counts(bundle)
     request_rows = sum(
         _integer(row.get("request_count")) or 0
         for row in bundle.rows["endpoint-summary.csv"]
+        if row.get("endpoint_id") in REPORT_ENDPOINT_IDS
     )
     epoch_rows = sum(
         _integer(row.get("epoch_count")) or 0
         for row in bundle.rows["endpoint-summary.csv"]
+        if row.get("endpoint_id") in REPORT_ENDPOINT_IDS
     )
     chart = {path.stem: path for path in charts}
     access_incident = _access_incident(bundle)
@@ -861,9 +882,9 @@ def _executive_pages(
                 styles["body"],
             ),
             _callout(
-                "Current onboarding gate · access denied",
+                "Inference balance gate · restored, verify before load",
                 (
-                    "The only authorized benchmark token began returning HTTP 403 from both DigitalOcean's account-control API and serverless-inference API. The interrupted closure wave is preserved as an access/reliability incident and contributes zero capability claims. Do not start or expand production traffic until DigitalOcean restores account access and a fresh serial control passes."
+                    "The interrupted closure wave encountered HTTP 403 while the Serverless Inference prepaid balance was depleted. After the owner replenished the balance, the same inference credential again returned HTTP 200 from /v1/models. The separate account-control endpoint still returns 403 and is not used as an inference-readiness gate. Run two cheap serial DO-hosted marker controls before each new load wave."
                     if access_incident
                     else "No current-access closure receipt is present in this bundle. Validate account and inference access immediately before production use."
                 ),
@@ -1100,7 +1121,7 @@ def _endpoint_pages(
     inventory = _inventory(bundle)
     summaries = _endpoint_summary(bundle)
     story: list[Flowable] = []
-    for index, endpoint in enumerate(EXPECTED_ENDPOINT_IDS, 1):
+    for index, endpoint in enumerate(REPORT_ENDPOINT_IDS, 1):
         inv = inventory[endpoint]
         summary = summaries.get(endpoint, {})
         documented = json.loads(inv.get("documented_capabilities") or "{}")
@@ -1170,12 +1191,52 @@ def _endpoint_pages(
                 Spacer(1, 4 * mm),
                 _p("Deployment guidance", styles["h2"]),
                 _p(
-                    "Current gate: restore account access and pass a fresh serial control before deployment. Then feature-gate from observed evidence, not the family name. Start below the relevant measured anchor, keep a separate concurrency ceiling, and use open-loop AIMD so rising latency cannot hide offered load. Back off on 429; retry bounded 5xx/timeouts; never retry an unchanged validation error. Re-run the exact profile after a model version, region, quota, or serving-stack change.",
+                    "Current gate: /v1/models access recovered after the prepaid balance was replenished; pass two fresh serial streamed controls before deployment or another load wave. Then feature-gate from observed evidence, not the family name. Start below the relevant measured anchor, keep a separate concurrency ceiling, and use open-loop AIMD so rising latency cannot hide offered load. Back off on 429; retry bounded 5xx/timeouts; never retry an unchanged validation error. Re-run the exact profile after a model version, region, quota, or serving-stack change.",
                     styles["body"],
                 ),
             ]
         )
     return story
+
+
+def _partner_model_incident_page(
+    styles: Mapping[str, ParagraphStyle], bundle: Bundle
+) -> list[Flowable]:
+    summary = _endpoint_summary(bundle).get(EXCLUDED_PARTNER_MODEL_ID, {})
+    rows = [
+        row
+        for row in bundle.rows["normalized-requests.csv"]
+        if row.get("endpoint_id") == EXCLUDED_PARTNER_MODEL_ID
+    ]
+    attributed_cost = sum(_num(row.get("estimated_cost_usd")) or 0.0 for row in rows)
+    return [
+        PageBreak(),
+        _p("Incident appendix · excluded partner model", styles["h1"]),
+        _callout(
+            "Arcee Trinity is not in the hosted-only production scope",
+            "DigitalOcean's current documentation lists Arcee Trinity in a separate Arcee partner-model section, before the DigitalOcean-Hosted Models table. Startup-program credits exclude third-party inference hosted outside DigitalOcean infrastructure. The benchmark should therefore not have included this endpoint under a credits-only instruction.",
+            styles,
+            warning=True,
+        ),
+        Spacer(1, 5 * mm),
+        _kpis(
+            [
+                (_fmt(summary.get("request_count"), 0), "HISTORICAL ROWS"),
+                (_money(attributed_cost), "TOKEN-ATTRIBUTED ESTIMATE"),
+                ("EXCLUDED", "PRODUCTION COMPARISONS"),
+            ],
+            styles,
+        ),
+        Spacer(1, 5 * mm),
+        _p(
+            "The rows remain in the immutable evidence bundle for cost reconciliation and forensic reproducibility. They are excluded from every chart, portfolio KPI, endpoint recommendation, and future spend-bearing default in this encyclopedia. The code now uses a documented hosted-model allowlist and rejects an explicit Arcee selection before any request can be sent.",
+            styles["body"],
+        ),
+        _p(
+            "The request ledger alone cannot prove which exact balance line item caused the prepaid account to reach zero. However, this partner-model usage is the campaign's identified passthrough exposure and is the most plausible reason credits did not absorb all inference charges.",
+            styles["body"],
+        ),
+    ]
 
 
 def _method_pages(
@@ -1310,6 +1371,7 @@ def build_pdf(artifact_dir: Path, output_pdf: Path) -> Path:
     story: list[Flowable] = [_cover(styles, bundle)]
     story.extend(_executive_pages(styles, bundle, charts))
     story.extend(_endpoint_pages(styles, bundle))
+    story.extend(_partner_model_incident_page(styles, bundle))
     story.extend(_method_pages(styles, bundle))
     document = SimpleDocTemplate(
         str(output_pdf),

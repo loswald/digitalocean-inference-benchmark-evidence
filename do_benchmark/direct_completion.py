@@ -33,8 +33,9 @@ from do_benchmark.core import (
     BenchmarkTask,
     JsonlJournal,
     MODEL_BY_ID,
-    MODEL_SPECS,
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
     StreamResult,
+    require_digitalocean_hosted_models,
     canonical_json,
     parse_token_usage,
     score_result,
@@ -116,6 +117,7 @@ class CompletionConfig:
         unknown = sorted(set(self.model_ids) - MODEL_BY_ID.keys())
         if unknown:
             raise ValueError(f"unknown DigitalOcean models: {', '.join(unknown)}")
+        require_digitalocean_hosted_models(self.model_ids)
         for path in (
             self.soak_dir,
             self.context_dir,
@@ -1785,4 +1787,4 @@ class DirectCompletionCampaign:
 
 
 def default_model_ids() -> tuple[str, ...]:
-    return tuple(spec.model_id for spec in MODEL_SPECS)
+    return DIGITALOCEAN_HOSTED_MODEL_IDS
