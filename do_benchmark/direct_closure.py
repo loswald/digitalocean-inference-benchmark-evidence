@@ -215,7 +215,10 @@ def build_cells(targets_path: Path, model_ids: Sequence[str]) -> list[ClosureCel
             "endpoint_id": endpoint_id,
             "probe_id": probe_id,
             "payload": source.rendered_payload_sha256,
-            "design": "control_before_probe_control_after_max_two_attempts",
+            "design": (
+                "transport_usage_control_before_probe_control_after_"
+                "max_two_attempts_v2"
+            ),
         }
         cells.append(
             ClosureCell(
@@ -239,6 +242,7 @@ def build_cells(targets_path: Path, model_ids: Sequence[str]) -> list[ClosureCel
                 "probe_id": task.task_id,
                 "max_tokens": max_tokens,
                 "task": task.expected,
+                "design": "realized_output_anchor_v2",
             }
             cells.append(
                 ClosureCell(
@@ -544,7 +548,16 @@ class MatchedClosureCampaign:
 
     @staticmethod
     def _control_pass(row: Mapping[str, Any]) -> bool:
-        return row.get("status") == "success" and row.get("functional_valid") is True
+        # A matched control establishes that the route was healthy around the
+        # probe. It must not test whether the model followed an unrelated exact-
+        # echo instruction. The latter confounds route health with model quality
+        # and previously discarded healthy HTTP-200 controls. Positive, complete
+        # usage proves that the request reached and generated on the route.
+        return bool(
+            row.get("status") == "success"
+            and row.get("transport_success") is True
+            and row.get("usage_complete_for_settlement") is True
+        )
 
     @staticmethod
     def _retryable(rows: Sequence[Mapping[str, Any]]) -> bool:

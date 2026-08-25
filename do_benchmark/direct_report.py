@@ -5282,15 +5282,16 @@ def build_coverage(
     matched_replacements = [
         row
         for row in ledger
-        if str(row.get("source_id", "")).startswith("do-matched-closure-")
+        if (
+            row.get("completion_lane") == "matched_control_closure"
+            or str(row.get("source_id", "")).startswith("do-matched-closure-")
+        )
         and row.get("status") in {"completed", "unsupported"}
         and row.get("probe_id") is not None
     ]
     for replacement in matched_replacements:
         for target in ledger:
             if target is replacement or target.get("status") != "inconclusive":
-                continue
-            if str(target.get("source_id", "")).startswith("do-matched-closure-"):
                 continue
             if (
                 target.get("endpoint_id") == replacement.get("endpoint_id")
@@ -5308,6 +5309,50 @@ def build_coverage(
                         ),
                     }
                 )
+
+    # Load, recovery, and paired-quality cells are repeated measurements. A
+    # failed replicate remains a failure observation, but it does not mean the
+    # experiment was never completed once another exact endpoint/workload
+    # replicate is complete. Grouping by workload prevents a short/short pass
+    # from standing in for a long-context or mixed-load experiment.
+    replicated_dimensions = {
+        "low_load_baseline",
+        "post_overload_recovery",
+        "quality_low_load",
+        "quality_near_saturation",
+    }
+    replicated_groups: dict[tuple[str, str, str], list[dict[str, Any]]] = (
+        defaultdict(list)
+    )
+    for row in ledger:
+        if row.get("coverage_dimension") not in replicated_dimensions:
+            continue
+        replicated_groups[
+            (
+                str(row.get("endpoint_id")),
+                str(row.get("coverage_dimension")),
+                str(row.get("workload")),
+            )
+        ].append(row)
+    for members in replicated_groups.values():
+        completed = [row for row in members if row.get("status") == "completed"]
+        if not completed:
+            continue
+        for row in members:
+            if row.get("status") != "inconclusive":
+                continue
+            row.update(
+                {
+                    "status": "replicate_failure_observed",
+                    "completed_replicate_source_ids": sorted(
+                        {str(item.get("source_id")) for item in completed}
+                    ),
+                    "coverage_policy": (
+                        "exact endpoint/dimension/workload completion exists; "
+                        "retain failed replicate without relabelling it successful"
+                    ),
+                }
+            )
 
     # Repeated soak attempts are replicates, not an all-or-nothing chain. Once
     # one complete two-minute cell exists for the same endpoint, workload and

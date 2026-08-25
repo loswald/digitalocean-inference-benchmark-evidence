@@ -68,7 +68,12 @@ def test_plan_contains_target_and_realized_output_anchors(tmp_path: Path) -> Non
 def test_matched_400_is_conclusive_exact_state_rejection(tmp_path: Path) -> None:
     campaign = _campaign(tmp_path)
     cell = next(item for item in campaign.cells if item.kind == "matched_capability")
-    control = {"status": "success", "functional_valid": True}
+    control = {
+        "status": "success",
+        "transport_success": True,
+        "usage_complete_for_settlement": True,
+        "functional_valid": False,
+    }
     probe = {
         "request_id": "probe",
         "status": "client_rejection",
@@ -85,7 +90,12 @@ def test_matched_400_is_conclusive_exact_state_rejection(tmp_path: Path) -> None
 def test_repeated_500_is_benchmark_conclusive_not_support_claim(tmp_path: Path) -> None:
     campaign = _campaign(tmp_path)
     cell = next(item for item in campaign.cells if item.kind == "matched_capability")
-    control = {"status": "success", "functional_valid": True}
+    control = {
+        "status": "success",
+        "transport_success": True,
+        "usage_complete_for_settlement": True,
+        "functional_valid": False,
+    }
     probe = {
         "request_id": "probe",
         "status": "provider_error",
@@ -104,7 +114,12 @@ def test_repeated_500_is_benchmark_conclusive_not_support_claim(tmp_path: Path) 
 def test_failed_control_keeps_probe_inconclusive(tmp_path: Path) -> None:
     campaign = _campaign(tmp_path)
     cell = next(item for item in campaign.cells if item.kind == "matched_capability")
-    bad_control = {"status": "timeout", "functional_valid": False}
+    bad_control = {
+        "status": "timeout",
+        "transport_success": False,
+        "usage_complete_for_settlement": False,
+        "functional_valid": False,
+    }
     probe = {
         "request_id": "probe",
         "status": "client_rejection",
