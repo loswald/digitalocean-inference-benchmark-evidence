@@ -1408,6 +1408,60 @@ def test_missing_endpoint_rows_are_explicitly_untested(tmp_path: Path) -> None:
             validate_public_analysis_contract(mismatched)
 
 
+def test_analysis_quarantines_historical_partner_rows(tmp_path: Path) -> None:
+    breadth = tmp_path / "breadth-with-partner"
+    hosted = _breadth_record(cell_id="hosted", family="short_exact")
+    partner = _breadth_record(cell_id="partner", family="short_exact")
+    partner["model_id"] = "arcee-trinity-large-thinking"
+    _write_jsonl(
+        breadth / "plan.jsonl",
+        [
+            {
+                "cell_id": "hosted",
+                "model_id": DEEPSEEK_ENDPOINT_ID,
+                "task": {"task_id": "hosted", "family": "short_exact"},
+            },
+            {
+                "cell_id": "partner",
+                "model_id": "arcee-trinity-large-thinking",
+                "task": {"task_id": "partner", "family": "short_exact"},
+            },
+        ],
+    )
+    _write_jsonl(breadth / "records.jsonl", [hosted, partner])
+    (breadth / "manifest.json").write_text(
+        json.dumps(
+            {
+                "models": [DEEPSEEK_ENDPOINT_ID, "arcee-trinity-large-thinking"],
+                "scope_exclusions": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    analysis = analyze_and_write(
+        breadth_directories=[breadth],
+        aimd_directories=[],
+        endpoint_freeze=ROOT / "config" / "endpoint-freeze.json",
+        output_directory=tmp_path / "public",
+        bootstrap_replicates=10,
+    )
+
+    assert all(
+        row["endpoint_id"] != "arcee-trinity-large-thinking"
+        for row in analysis["endpoint_summaries"]
+    )
+    quarantine = next(
+        row
+        for row in analysis["data_sources"]
+        if row["source_kind"] == "scope_quarantine"
+    )
+    assert quarantine["quarantined_rows"]["requests"] == 1
+    assert quarantine["request_attributed_estimated_cost_usd"] == pytest.approx(
+        partner["estimated_cost_usd"]
+    )
+
+
 def test_capacity_uses_explicit_confirmations_and_never_invents_headroom() -> None:
     common = {
         "source_kind": "direct_aimd",

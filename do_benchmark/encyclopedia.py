@@ -1202,13 +1202,19 @@ def _endpoint_pages(
 def _partner_model_incident_page(
     styles: Mapping[str, ParagraphStyle], bundle: Bundle
 ) -> list[Flowable]:
-    summary = _endpoint_summary(bundle).get(EXCLUDED_PARTNER_MODEL_ID, {})
-    rows = [
-        row
-        for row in bundle.rows["normalized-requests.csv"]
-        if row.get("endpoint_id") == EXCLUDED_PARTNER_MODEL_ID
-    ]
-    attributed_cost = sum(_num(row.get("estimated_cost_usd")) or 0.0 for row in rows)
+    quarantine = next(
+        (
+            row
+            for row in bundle.analysis.get("data_sources", [])
+            if row.get("source_kind") == "scope_quarantine"
+        ),
+        {},
+    )
+    quarantined_rows = quarantine.get("quarantined_rows", {})
+    historical_request_rows = int(_num(quarantined_rows.get("requests")) or 0)
+    attributed_cost = _num(
+        quarantine.get("request_attributed_estimated_cost_usd")
+    ) or 0.0
     return [
         PageBreak(),
         _p("Incident appendix · excluded partner model", styles["h1"]),
@@ -1221,7 +1227,7 @@ def _partner_model_incident_page(
         Spacer(1, 5 * mm),
         _kpis(
             [
-                (_fmt(summary.get("request_count"), 0), "HISTORICAL ROWS"),
+                (_fmt(historical_request_rows, 0), "HISTORICAL ROWS"),
                 (_money(attributed_cost), "TOKEN-ATTRIBUTED ESTIMATE"),
                 ("EXCLUDED", "PRODUCTION COMPARISONS"),
             ],
@@ -1318,7 +1324,7 @@ def _method_pages(
         ),
         Spacer(1, 5 * mm),
         _p(
-            "The two cost figures overlap and must not be added. Request-attributed cost uses reported token usage and includes the quarantined $9.486 historical partner-model estimate. Conservative exposure retains worst-case reservations for failed, timed-out, or usage-incomplete requests and is the budget guard.",
+            "The two cost figures overlap and must not be added. The request-attributed estimate shown here covers only the 11 hosted endpoints; historical partner-model rows are reported separately in the incident appendix. Conservative exposure remains the authoritative cumulative guard and retains every earlier stage plus worst-case reservations for failed, timed-out, or usage-incomplete requests.",
             styles["body"],
         ),
         _p("Reproduce a provider run", styles["h2"]),

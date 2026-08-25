@@ -8044,6 +8044,12 @@ def analyze_and_write(
             continue
         loaded = load_soak_directory(path)
         append_soak_evidence(loaded, cost_path=Path(path))
+    partner_requests = [
+        row
+        for row in requests
+        if _text(row.get("endpoint_id") or row.get("model_id"))
+        in HISTORICAL_PARTNER_ENDPOINT_IDS
+    ]
     quarantined_partner_rows = {
         "plans": sum(
             _text(row.get("endpoint_id") or row.get("model_id"))
@@ -8077,6 +8083,11 @@ def analyze_and_write(
             "policy": "excluded_from_all_current_hosted_endpoint_estimands",
             "endpoint_ids": sorted(HISTORICAL_PARTNER_ENDPOINT_IDS),
             "quarantined_rows": quarantined_partner_rows,
+            "request_attributed_estimated_cost_usd": sum(
+                _number(row.get("estimated_cost_usd")) or 0.0
+                for row in partner_requests
+                if row.get("cost_attributed") is True
+            ),
             "cost_policy": (
                 "historical campaign exposure remains in cumulative stage receipts"
             ),
