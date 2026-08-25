@@ -6,10 +6,11 @@ runner creates a new campaign and must use a new output directory.
 
 ## Release status
 
-The public artifacts are a **draft incomplete-evidence release**. The strict
-matrix resolves 105 of 192 planned cells, so the final-publication gate fails by
-design. Offline regeneration should reproduce that failure; it must not coerce
-inconclusive cells into completed ones.
+The public artifacts are a **final hosted-only evidence release**. The frozen
+matrix covers 11 DigitalOcean-hosted endpoints × 16 dimensions and resolves all
+176 cells: 169 completed and 7 evidence-backed unsupported. The final gate also
+requires an empty orphan-request ledger, exact source/cost-chain reconciliation,
+correct statistical units, schema-valid tables, and a clean public-safety scan.
 
 ## Verify the package offline
 
@@ -57,16 +58,13 @@ settled request inside the same campaign cap.
 
 ## Offline analysis
 
-The checked-in public bundle keeps the 105 MB canonical analysis JSON compressed
+The checked-in public bundle keeps the 96 MB canonical analysis JSON compressed
 to stay below Git hosting limits. The PDF builder reads it directly:
 
 ```bash
-python scripts/build-direct-public-report-pdf.py \
+python scripts/build-digitalocean-encyclopedia.py \
   --artifacts results \
-  --output build/DigitalOcean-Inference-Endpoint-Benchmark-August-2026.pdf \
-  --mode draft \
-  --title "DigitalOcean Inference Endpoint Technical Benchmark" \
-  --subtitle "Incomplete evidence report — 23–25 August 2026"
+  --output build/DigitalOcean-Inference-Engineering-Encyclopedia-August-2026.pdf
 ```
 
 The decompressed `results/analysis.json` hash is recorded in
@@ -80,14 +78,17 @@ report, and an artifact manifest:
 
 ```bash
 python scripts/analyze-direct-public-report.py \
-  --breadth-dir /evidence/breadth \
-  --aimd-dir /evidence/aimd \
-  --soak-dir /evidence/soak \
+  --breadth-dir /evidence/breadth-a \
+  --breadth-dir /evidence/context-b \
+  --aimd-dir /evidence/aimd-a \
+  --aimd-dir /evidence/aimd-b \
+  --soak-dir /evidence/soak-a \
   --completion-dir /evidence/completion \
-  --closure-dir /evidence/matched-closure \
+  --closure-dir /evidence/matched-closure-a \
+  --cost-only-dir /evidence/excluded-science-cost-stage \
   --output-dir build/analysis \
-  --bootstrap-replicates 2000 \
-  --publication-mode draft
+  --bootstrap-replicates 10000 \
+  --publication-mode final
 ```
 
 Paths above are placeholders. The private raw campaign journals are not
@@ -109,8 +110,8 @@ python scripts/build-digitalocean-encyclopedia.py \
 
 The older long-form builder remains available for forensic comparison, but it
 is not the primary engineering handoff. The encyclopedia uses matched workload
-small multiples, explicit missing/censored cells, a deterministic timing
-outlier audit, and per-endpoint operating tables.
+small multiples, explicit unsupported/censored cells, a deterministic timing
+outlier audit, production triage, and per-endpoint operating tables.
 
 Build the legacy detailed PDF only when needed:
 
@@ -118,14 +119,13 @@ Build the legacy detailed PDF only when needed:
 python scripts/build-direct-public-report-pdf.py \
   --artifacts build/analysis \
   --output build/DigitalOcean-Inference-Endpoint-Benchmark-August-2026.pdf \
-  --mode draft \
+  --mode final \
   --title "DigitalOcean Inference Endpoint Technical Benchmark" \
-  --subtitle "Incomplete evidence report — 23–24 August 2026"
+  --subtitle "Hosted-only final evidence release — 23–25 August 2026"
 ```
 
-`--mode final` is intentionally expected to fail until all 192 cells are
-resolved by their exact evidence contracts. Do not edit the matrix status to
-make that gate pass.
+Do not edit matrix statuses to make a final gate pass. Regeneration must derive
+the same result from the separately preserved, hash-bound campaign journals.
 
 ## Trace one result
 

@@ -29,17 +29,20 @@ raw headers.
 | Interrupted matched closure | 2026-08-24 23:16–23:19 | Sealed inconclusive; no replay |
 | Hosted recovery controls | 2026-08-25 00:12–00:24 | Complete; access restored |
 | Hosted-only closure | 2026-08-25 00:25–00:53 | 177/177 terminal; 51 conclusive |
+| Hosted-only closure v2 | 2026-08-25 02:22–02:44 | Complete; matched controls |
+| Hosted context closure | 2026-08-25 03:44–04:21 | 199/199 terminal |
+| Final matched closure | 2026-08-25 04:31–04:40 | 57/57 semantic records; 196 attempts |
+| Targeted Gemma context | 2026-08-25 04:42–04:50 | Complete; nonmonotonic retrieval retained |
+| Fixed Nemotron Super soak | 2026-08-25 04:55–04:57 | 139/139 transport success; quality recovery failed |
 
-The final conservative exposure was `$240.825554971` under a `$400` cap. One
+The final conservative exposure was `$329.972391327` under a `$400` cap. One
 historical context stage latched HTTP 402; later stages preserve that fact but
-do not attribute it to model quality. The public analysis ingests 42,177 source
-request/attempt rows, of which 41,595 normalized workload rows support matched
-performance tables, plus 1,453 epoch rows.
+do not attribute it to model quality. The public analysis contains 42,864
+normalized request/attempt rows and 1,435 load epochs.
 
-The immutable historical evidence matrix is 192 cells. It resolves 117 cells
-and leaves 75 inconclusive. The hosted-only production view is 176 cells: 100
-completed, 7 unsupported, and 69 inconclusive. Publication status remains
-`draft_incomplete_coverage`.
+The immutable partner-inclusive historical matrix is retained only for forensic
+scope reconciliation. The hosted-only publication view is 176 cells: 169
+completed and 7 unsupported. Publication status is `publication_ready`.
 
 ## Transformation lineage
 

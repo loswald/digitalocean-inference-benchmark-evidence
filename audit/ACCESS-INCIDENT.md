@@ -17,9 +17,10 @@ This note separates a late credential/account failure from model and endpoint re
 - The credential still returned HTTP 403 from `https://api.digitalocean.com/v2/account`.
   The control-plane API is a separate surface and is not treated as the inference-readiness
   gate.
-- The cumulative conservative campaign exposure after the hosted-only recovery and closure
-  wave is `$240.825554971`, below the owner-approved `$400` cap. No HTTP 402 latch occurred
-  in those recovery/closure runs.
+- The cumulative conservative campaign exposure after that hosted-only recovery and closure
+  wave was `$240.825554971`. Later authorized hosted-only context and closure work brought the
+  final campaign exposure to `$329.972391327`, below the owner-approved `$400` cap. No HTTP 402
+  latch occurred in those later recovery/closure runs.
 
 No credential, prompt, model output, response body, or raw header is retained in this public note.
 
@@ -51,8 +52,9 @@ The following gate was applied before the hosted-only closure wave:
 4. Every selected model passes the hosted-only allowlist; Arcee and every other partner/passthrough
    model fail closed before a request is sent.
 
-All four gates passed. The subsequent hosted-only campaign sent 521 provider attempts across
+All four gates passed. The subsequent first hosted-only campaign sent 521 provider attempts across
 177/177 terminal cells, plus 9 serial recovery/control attempts. It observed 378 HTTP 200, 105
 expected validation HTTP 400, and 30 HTTP 500 responses in the main closure wave, with no HTTP
-402 and no Arcee selection. Fifty-one cells became conclusive; unresolved cells remain labelled
-inconclusive rather than being converted into support or rejection claims.
+402 and no Arcee selection. Later matched-control waves retained the same hosted-only allowlist
+and resolved the final broad publication matrix without replaying incident identifiers. Granular
+inconclusive and operational-failure subtests remain explicit in the coverage ledger.

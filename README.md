@@ -11,10 +11,11 @@ This repository is not affiliated with or endorsed by DigitalOcean.
 
 ## Bottom line
 
-**This is useful evidence, but it is not a complete certification of the
-portfolio.** The hosted-only publication matrix resolves 107 of 176 planned
-endpoint-by-dimension cells (60.8%): 100 completed, 7 evidence-backed
-unsupported, and 69 inconclusive. Every unresolved cell remains visible.
+**The planned hosted-only publication matrix is complete.** All 176 planned
+endpoint-by-dimension cells are resolved: 169 completed and 7 evidence-backed
+unsupported, with no inconclusive matrix cells and no unreconciled requests.
+That is 100% of the frozen study design—not an SLA, an eternal model catalog,
+or proof of 24-hour/region-wide stability.
 
 **Current inference access: restored after prepayment.** On 24 August, the
 authorized inference credential began returning HTTP 403 as the Serverless
@@ -38,6 +39,27 @@ recovery rule at its tested candidate rate. That does **not** prove the
 endpoint cannot work at a lower rate; it means this campaign did not establish
 a passing operating point.
 
+### Fast production triage
+
+- **Strongest all-round evidence: `qwen3.8-max`.** Its exact short/short soak
+  passed, tools and vision passed deterministic checks, and retrieval remained
+  correct through the tested ≈1.0M-token prompt point.
+- **Hold tool-dependent mixed traffic on `qwen3.5-397b-a17b` and
+  `nvidia-nemotron-3-super-120b`.** Matched tool probes repeatedly returned
+  provider 500 responses while adjacent controls succeeded; their mixed soaks
+  therefore failed at the low-load prerequisite rather than at a discovered
+  capacity knee.
+- **Treat DeepSeek V4 Flash 0731 long-context acceptance cautiously.** The
+  route accepted approximately 1.05M prompt tokens, but the retrieval marker
+  was functionally correct only through 2,722 tokens in this synthetic test.
+  Acceptance is not the same as useful long-context recall.
+- **Gemma is the other guarded pilot candidate with verified vision.** Its
+  short/short soak passed and context retrieval succeeded through the tested
+  251,873-token point, but high-context latency was slow and variable.
+- **No endpoint earned a blanket production recommendation.** In particular,
+  no heterogeneous mixed-load cell passed the full acceptance, quality, and
+  recovery contract.
+
 ### Action for engineers
 
 - Keep a positive Serverless Inference prepaid balance and pass two serial
@@ -50,8 +72,9 @@ a passing operating point.
   backoff after 429/5xx congestion, a concurrency ceiling, and a circuit
   breaker. Never retry validation 4xx responses.
 - For the other endpoint/workload combinations, use shadow traffic or a canary
-  until a workload-matched soak passes. Do not infer long-context, long-output,
-  tool, vision, or mixed-load capacity from a short/short result.
+  until a workload-matched soak passes. No heterogeneous mixed-load cell passed
+  the strict composite. Do not infer long-context, long-output, tool, vision,
+  or mixed-load capacity from a short/short result.
 - Recalibrate after model, account, region, or service changes. DigitalOcean's
   public quota is account-scoped, while the observations also show
   route-specific throttling behavior.
@@ -66,34 +89,36 @@ a passing operating point.
   3,210 rows and approximately $9.4861 of token-attributed usage are retained
   only in the incident appendix and excluded from production comparisons and
   every future spend-bearing default.
-- **10,685 requests in the fresh endpoint-isolated AIMD campaign:** 10,332
-  HTTP 200 and 353 HTTP 429; no 402, 5xx, or timeout in that campaign.
-- **532 capacity-valid AIMD epochs.** Twenty-two of 48 fresh endpoint/shape
-  cells met the three-separated-confirmation rule; 12 remained right-censored.
-  Different campaigns sometimes found different healthy rates, so they are
-  reported separately and never pooled into a fictional universal ceiling.
-- **48 two-minute endpoint/shape soaks:** all executed, 45 were scientifically
-  complete and 3 were transport-gated. Follow-up closure waves attempted the
-  unresolved cells, but only the three short/short cells above passed the full
-  acceptance-plus-recovery rule.
-- **1,260 capability cells**, with 1,248 provider attempts.
-- **180 fixed context probes plus adaptive refinements** across all endpoints.
-- **304 original completion/closure probes**, of which 61 were conclusive under
-  the strict analysis contract.
-- **52 additional matched-closure physical attempts** during the access
-  incident: 32 HTTP 403, 4 HTTP 500, and 16 HTTP 503. Twelve semantic cells
-  reached a terminal inconclusive state; none became a support/rejection claim.
-- **530 additional DO-hosted recovery/closure attempts** on 25 August: 177/177
-  hosted-only cells reached a terminal state, with 51 conclusive cells, 378
-  HTTP 200 responses, 105 expected validation HTTP 400 responses, 30 HTTP 500
-  responses, and no HTTP 402. Arcee was not selected or sent.
-- **42,177 source request/attempt rows ingested**, including 41,595 normalized
-  workload rows used by the matched performance tables. Of those normalized
-  rows, 38,385 are from the 11 hosted endpoints and 3,210 are the quarantined
-  historical Arcee rows.
-- **$240.8256 conservative cumulative exposure** under a $400 campaign cap.
-  This is an experiment ledger, not a DigitalOcean invoice or proof of credit
-  application.
+- **40,049 matched hosted request observations and 1,343 hosted load epochs**
+  enter the final scientific analysis. Every physical matched-control attempt
+  reconciles to its frozen semantic cell; the orphan ledger is empty. Historical
+  and quarantined rows remain in the immutable evidence bundle but are excluded
+  from these hosted production counts.
+- **Two isolated open-loop AIMD campaigns and four workload shapes per
+  endpoint.** Twenty-five of the 44 hosted endpoint/shape cells established at
+  least one three-separated-confirmation healthy-rate lower bound. Results from
+  different campaigns remain separate rather than being pooled into a fictional
+  universal ceiling.
+- **44 hosted endpoint/shape two-minute soaks:** 42 are scientifically complete.
+  The two remaining mixed-load cells—Qwen 3.5 397B and Nemotron 3 Super—are
+  resolved as operational failures because their low-load tool prerequisites
+  repeatedly returned provider 500 responses while adjacent controls passed.
+  Only the three exact short/short cells above passed the full composite.
+- **208 endpoint/capability aggregate findings** backed by transport,
+  deterministic functional, malformed-input, parameter-boundary, and matched
+  control evidence. Vision is functionally verified only on Gemma 4 31B IT and
+  Qwen 3.8 Max in this campaign.
+- **Fixed context anchors plus adaptive refinements** reached roughly one
+  million realized prompt tokens. Qwen 3.8 Max retrieved correctly through the
+  tested ≈1.0M point; HTTP acceptance without correct retrieval is reported
+  separately for other routes.
+- **1,322 matched-control physical attempts** are fully reconciled across the
+  closure waves. Expected validation 400s, repeated provider 500s, access-gated
+  403/503 incidents, and successful controls remain distinct outcomes.
+- **$329.9724 conservative cumulative exposure** under the authorized $400
+  cap. The overlapping request-attributed estimate is $272.2202; the two
+  figures must not be added. This is an experiment ledger, not a DigitalOcean
+  invoice or proof of how credits were applied.
 
 ## Start here
 
@@ -102,7 +127,7 @@ a passing operating point.
 - [Reproduction guide](REPRODUCE.md)
 - [Results guide](results/README.md)
 - [Endpoint summary](results/endpoint-summary.csv)
-- [Coverage matrix](results/coverage-ledger.jsonl)
+- [Granular coverage ledger](results/coverage-ledger.jsonl)
 - [Capacity-cell table](results/capacity-summary.csv)
 - [Soak-cell table](results/soak-cell-summary.csv)
 - [Capability table](results/capability-evidence.csv)
@@ -110,8 +135,10 @@ a passing operating point.
 - [Time and cost ledger](results/cost-summary.json)
 - [Endpoint count and token-cost summary](results/endpoint-summary.csv)
 
-The PDF is deliberately labelled as an incomplete-evidence report. A report
-that issued many requests is not automatically a complete benchmark.
+The PDF passes the frozen matrix, sample-unit, interval, schema, reconciliation,
+and publication-safety gates. It still labels right-censored bounds and narrow
+workload claims honestly; a complete design is not the same thing as a provider
+guarantee.
 
 ## Interpretation rules
 

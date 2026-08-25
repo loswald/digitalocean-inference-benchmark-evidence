@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,13 +36,35 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(canonical_bytes(path)).hexdigest()
 
 
+def repository_files(root: Path) -> list[Path]:
+    """Return version-controlled files when run from a Git checkout.
+
+    A public artifact manifest must not absorb local render directories, downloaded
+    checkpoints, or other untracked QA material that happens to sit beside the
+    checkout.  The filesystem fallback keeps source archives reproducible after
+    Git metadata has been removed.
+    """
+    tracked = subprocess.run(
+        ["git", "-C", str(root), "ls-files", "-z"],
+        check=False,
+        capture_output=True,
+    )
+    if tracked.returncode == 0:
+        return [
+            root / Path(item.decode("utf-8"))
+            for item in tracked.stdout.split(b"\0")
+            if item
+        ]
+    return sorted(root.rglob("*"))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("artifact_dir", type=Path)
     args = parser.parse_args()
     root = args.artifact_dir.resolve()
     files = []
-    for path in sorted(root.rglob("*")):
+    for path in sorted(repository_files(root)):
         relative = path.relative_to(root)
         if (
             not path.is_file()

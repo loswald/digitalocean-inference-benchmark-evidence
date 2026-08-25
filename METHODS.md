@@ -29,29 +29,31 @@ runners now reject any identifier outside the hosted-only allowlist before
 network access.
 
 The direct campaigns shared a $400 cumulative exposure cap. The final
-conservative ledger was $240.825554971 after the hosted-only recovery and
-closure campaign. Endpoint-isolated capacity work never
+conservative ledger was $329.972391327 after the hosted-only context,
+matched-control, targeted context, and fixed-soak closure. Endpoint-isolated capacity work never
 overlapped another provider workload. The context runner used one sequential
 chain per endpoint and ran those chains concurrently behind an account-wide
 RPM/TPM governor; those context timings are diagnostic only and are not reported
 as isolated endpoint latency. Unequal endpoint latency, transport failures,
-budget guards, and finite windows produced unequal coverage; missing and
-inconclusive cells remain visible.
+budget guards, and finite windows produced unequal granular evidence. Every
+granular incomplete, failed-replicate, superseded, skipped, and inconclusive
+subtest remains visible even though the broad publication matrix is resolved.
 
 The hosted-only evidence matrix is `11 endpoints × 16 dimensions = 176 cells`.
 A cell is resolved only when its dimension-specific evidence rule passes or an
 exact, evidence-backed unsupported result exists. The final immutable 12-model
-matrix contains 109 completed cells, 8 unsupported cells, and 75 inconclusive
-cells before the partner-model exclusion; the hosted-only production view
-contains 100 completed, 7 unsupported, and 69 inconclusive cells. Therefore this
-repository is an incomplete-evidence report, not a complete endpoint
-certification.
+historical matrix is retained only for scope reconciliation. The final
+hosted-only publication view contains 169 completed and 7 unsupported cells,
+with zero inconclusive broad-matrix cells. This is complete coverage of the
+frozen design, not a service certification or a claim that every tested feature
+or operating point passed.
 
-The three workload labels are literal request shapes, not general model classes:
+The four workload labels are literal request shapes, not general model classes:
 
 - **short / short:** short prompt and short requested response;
-- **long / short:** long prompt with a short answer, including exact retrieval;
-- **short / long:** short prompt with a long requested response.
+- **32K input / short output:** long prompt with a short answer, including exact retrieval;
+- **short input / long output:** short prompt with a long requested response;
+- **heterogeneous mixed:** a deterministic mix of task and payload families.
 
 Task correctness was determined locally where a machine-checkable answer was
 available. Examples include exact values, parsed JSON, selected tool and
