@@ -359,11 +359,6 @@ class ContextConfig:
                 ),
                 "minimum_congestion_factor": (self.governor_minimum_congestion_factor),
                 "successes_per_increase": self.governor_successes_per_increase,
-                "http_429_scope_policy": (
-                    "account_wide_aimd_only_when_request_or_tpm_exhaustion_is_"
-                    "reported_or_quota_evidence_is_absent; full_request_and_tpm_"
-                    "remaining_signals_classify_the_429_as_endpoint_pressure"
-                ),
                 "inference_limits_doc_url": INFERENCE_LIMITS_DOC_URL,
                 "inference_limits_doc_verified_date": (
                     INFERENCE_LIMITS_DOC_VERIFIED_DATE
@@ -996,6 +991,42 @@ class AccountQuotaGovernor:
         self._observations = 0
         self._http_429_observations = 0
         self._endpoint_pressure_429_observations = 0
+        self._limits_rehydrated_from_journal = False
+
+    def restore_observed_limits(self, signals: Mapping[str, Any]) -> bool:
+        """Restore only provider-declared account ceilings on an idempotent resume.
+
+        Virtual admission clocks, remaining balances, resets, cooldowns, and
+        congestion state are deliberately not restored. Those are transient.
+        Reusing the last positive RPM/TPM ceilings prevents a resume from
+        scheduling every pending long-context request against stale fallback
+        rates before the first new response arrives.
+        """
+
+        request_limit = _parse_nonnegative_float(
+            signals.get("rate_limit_limit_requests")
+        )
+        token_limit = _parse_nonnegative_float(
+            signals.get("rate_limit_limit_tokens_per_minute")
+        )
+        if (
+            request_limit is None
+            or request_limit <= 0
+            or token_limit is None
+            or token_limit <= 0
+        ):
+            return False
+        self._request_limit_per_minute = request_limit
+        self._token_limit_per_minute = token_limit
+        self._request_limit_observed = True
+        self._token_minute_limit_observed = True
+        daily_limit = _parse_nonnegative_float(
+            signals.get("rate_limit_limit_tokens_per_day")
+        )
+        if daily_limit is not None and daily_limit > 0:
+            self._daily_token_limit = daily_limit
+        self._limits_rehydrated_from_journal = True
+        return True
 
     @property
     def bootstrap_ready(self) -> bool:
@@ -1269,6 +1300,7 @@ class AccountQuotaGovernor:
             "endpoint_pressure_429_observations": (
                 self._endpoint_pressure_429_observations
             ),
+            "limits_rehydrated_from_journal": self._limits_rehydrated_from_journal,
             "latest_numeric_signals": dict(self._latest_signals),
             "restart_policy": "cold_conservative_governor_no_request_replay",
         }
@@ -2502,6 +2534,21 @@ class DirectContextCampaign:
         started_at = utc_now()
         self._global_semaphore = asyncio.Semaphore(self.config.global_concurrency)
         self.quota_governor = AccountQuotaGovernor(self.config)
+
+        # Request IDs and reservations are already durable. Rehydrate only the
+        # last provider-declared account ceilings so unsent work resumes at the
+        # observed quota instead of registering hours of fallback-rate waits.
+        # No historical remaining balance, cooldown, or request is replayed.
+        for row in sorted(
+            self.request_rows.values(),
+            key=lambda item: str(item.get("ended_at") or ""),
+            reverse=True,
+        ):
+            signals = row.get("server_signals")
+            if isinstance(signals, Mapping) and self.quota_governor.restore_observed_limits(
+                signals
+            ):
+                break
 
         # Bootstrap conservatively: keep calibration requests serialized until
         # both the account request limit and token-per-minute limit have been

@@ -733,6 +733,48 @@ def test_large_probe_is_paced_not_rejected_by_fallback_tpm() -> None:
     assert clock.sleeps == [150.0]
 
 
+def test_governor_rehydrates_only_observed_limits_on_resume() -> None:
+    config = _config(
+        Path("unused-rehydrate"),
+        fallback_account_rpm=120.0,
+        fallback_account_tpm=500_000.0,
+        quota_utilization_fraction=0.8,
+    )
+    clock = _FakeClock()
+    governor = AccountQuotaGovernor(
+        config,
+        monotonic=clock.monotonic,
+        epoch_time=clock.epoch,
+        sleeper=clock.sleep,
+    )
+    restored = governor.restore_observed_limits(
+        {
+            "rate_limit_limit_requests": 4_500.0,
+            "rate_limit_limit_tokens_per_minute": 3_500_000.0,
+            "rate_limit_limit_tokens_per_day": 10_000_000_000.0,
+            # Transient signals are intentionally ignored.
+            "rate_limit_remaining_tokens_per_minute": 1.0,
+            "rate_limit_reset_tokens_per_minute_epoch_seconds": 9_999.0,
+        }
+    )
+
+    async def scenario() -> dict[str, object]:
+        admission = await governor.acquire(
+            estimated_tokens=1,
+            stop_launch_at=datetime.fromtimestamp(2_000, timezone.utc),
+        )
+        assert admission is not None
+        return admission
+
+    admission = asyncio.run(scenario())
+    assert restored is True
+    assert governor.bootstrap_ready is True
+    assert admission["effective_request_rate_per_minute"] == 3_600.0
+    assert admission["effective_token_rate_per_minute"] == 2_800_000.0
+    assert admission["open_loop_wait_seconds"] == 0.0
+    assert governor.snapshot()["limits_rehydrated_from_journal"] is True
+
+
 def test_scheduler_contract_is_hash_bound_and_latency_scope_is_explicit(
     tmp_path,
 ) -> None:
