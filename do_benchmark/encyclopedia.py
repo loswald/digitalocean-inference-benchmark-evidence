@@ -165,7 +165,7 @@ def load_bundle(root: Path) -> Bundle:
         )
     inventory_ids = {row.get("endpoint_id") for row in rows["endpoint-inventory.csv"]}
     if inventory_ids != set(EXPECTED_ENDPOINT_IDS):
-        raise ValueError("endpoint inventory does not match the frozen 12-endpoint set")
+        raise ValueError("endpoint inventory does not match the hosted endpoint set")
     return Bundle(root=root, rows=rows, analysis=analysis)
 
 

@@ -27,7 +27,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .core import MODEL_BY_ID, canonical_json, parse_token_usage, percentile
+from .core import (
+    DIGITALOCEAN_HOSTED_MODEL_IDS,
+    MODEL_BY_ID,
+    canonical_json,
+    parse_token_usage,
+    percentile,
+)
 from .statistics import (
     bootstrap_interval,
     deterministic_seed,
@@ -79,21 +85,10 @@ SOAK_PHASES = (
     "post_soak_recovery",
 )
 
-EXPECTED_ENDPOINT_IDS = (
-    "arcee-trinity-large-thinking",
-    "deepseek-v4-flash-0731",
-    "gemma-4-31B-it",
-    "glm-5.2",
-    "kimi-k3",
-    "minimax-m2.5",
-    "mimo-v2.5-pro",
-    "nemotron-3-ultra-550b",
-    "nvidia-nemotron-3-super-120b",
-    "openai-gpt-oss-120b",
-    "qwen3.5-397b-a17b",
-    "qwen3.8-max",
-)
+EXPECTED_ENDPOINT_IDS = DIGITALOCEAN_HOSTED_MODEL_IDS
 EXPECTED_ENDPOINT_SET = frozenset(EXPECTED_ENDPOINT_IDS)
+HISTORICAL_PARTNER_ENDPOINT_IDS = frozenset({"arcee-trinity-large-thinking"})
+KNOWN_EVIDENCE_ENDPOINT_SET = EXPECTED_ENDPOINT_SET | HISTORICAL_PARTNER_ENDPOINT_IDS
 DEEPSEEK_ENDPOINT_ID = "deepseek-v4-flash-0731"
 KIMI_ENDPOINT_ID = "kimi-k3"
 KIMI_UNDOCUMENTED_CONTEXT_PROBE_ANCHOR = 65_536
@@ -430,7 +425,7 @@ def _require_endpoint(value: Any) -> str:
         raise DirectReportError(
             "only deepseek-v4-flash-0731 is admissible; found " + repr(endpoint)
         )
-    if endpoint not in EXPECTED_ENDPOINT_SET:
+    if endpoint not in KNOWN_EVIDENCE_ENDPOINT_SET:
         raise DirectReportError(f"unexpected DigitalOcean endpoint {endpoint!r}")
     return endpoint
 
@@ -5804,13 +5799,13 @@ def validate_public_analysis_contract(
     inventory_ids = [str(row.get("endpoint_id") or "") for row in inventory]
     if inventory_ids != list(EXPECTED_ENDPOINT_IDS):
         errors.append(
-            "endpoint_inventory must contain the exact frozen 12 IDs in order"
+            "endpoint_inventory must contain the exact hosted endpoint IDs in order"
         )
     endpoint_summaries = _as_analysis_rows(analysis.get("endpoint_summaries"))
     endpoint_ids = [str(row.get("endpoint_id") or "") for row in endpoint_summaries]
     if endpoint_ids != list(EXPECTED_ENDPOINT_IDS):
         errors.append(
-            "endpoint_summaries must contain the exact frozen 12 IDs in order"
+            "endpoint_summaries must contain the exact hosted endpoint IDs in order"
         )
     for index, row in enumerate(endpoint_summaries):
         for key in _HETEROGENEOUS_ENDPOINT_METRICS:
@@ -6468,7 +6463,9 @@ def validate_public_analysis_contract(
         != len(REQUIRED_COVERAGE_DIMENSIONS)
         or required != frozen_required
     ):
-        errors.append("coverage_summary must declare the frozen 192-cell matrix")
+        errors.append(
+            "coverage_summary must declare the frozen hosted endpoint/dimension matrix"
+        )
     if completed is None or required in {None, 0}:
         errors.append("coverage_summary completed/required counts are invalid")
     elif completed != matrix_completed:
@@ -7859,12 +7856,44 @@ def analyze_and_write(
     soak_recovery_summaries: list[dict[str, Any]] = []
     sources: list[dict[str, Any]] = []
 
+    def hosted_rows(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+        """Keep current DigitalOcean-hosted endpoints out of historical partner data.
+
+        Strict loaders still validate old Arcee receipts so cumulative exposure
+        remains auditable.  The public performance estimands, coverage matrix,
+        and figures are then constructed only from the current hosted allowlist.
+        """
+
+        output: list[dict[str, Any]] = []
+        for row in rows:
+            endpoint = _text(row.get("endpoint_id") or row.get("model_id"))
+            if endpoint in EXPECTED_ENDPOINT_SET:
+                output.append(dict(row))
+        return output
+
+    def hosted_soak_source(loaded: Mapping[str, Any]) -> dict[str, Any]:
+        filtered = dict(loaded)
+        for key in (
+            "plan_cells",
+            "requests",
+            "epochs",
+            "phase_summaries",
+            "soak_summaries",
+            "block_summaries",
+            "quality_summaries",
+            "recovery_summaries",
+            "cell_rows",
+        ):
+            filtered[key] = hosted_rows(loaded.get(key, ()))
+        return filtered
+
     def append_soak_evidence(
         loaded: Mapping[str, Any],
         *,
         cost_path: Path | None,
         parent_completion_source_id: str | None = None,
     ) -> None:
+        loaded = hosted_soak_source(loaded)
         soak_sources.append(dict(loaded))
         requests.extend(loaded["requests"])
         epochs.extend(loaded["epochs"])
@@ -8015,6 +8044,46 @@ def analyze_and_write(
             continue
         loaded = load_soak_directory(path)
         append_soak_evidence(loaded, cost_path=Path(path))
+    quarantined_partner_rows = {
+        "plans": sum(
+            _text(row.get("endpoint_id") or row.get("model_id"))
+            in HISTORICAL_PARTNER_ENDPOINT_IDS
+            for row in plans
+        ),
+        "requests": sum(
+            _text(row.get("endpoint_id") or row.get("model_id"))
+            in HISTORICAL_PARTNER_ENDPOINT_IDS
+            for row in requests
+        ),
+        "epochs": sum(
+            _text(row.get("endpoint_id") or row.get("model_id"))
+            in HISTORICAL_PARTNER_ENDPOINT_IDS
+            for row in epochs
+        ),
+        "scope_exclusions": sum(
+            _text(row.get("endpoint_id") or row.get("model_id"))
+            in HISTORICAL_PARTNER_ENDPOINT_IDS
+            for row in scope_exclusions
+        ),
+    }
+    plans = hosted_rows(plans)
+    requests = hosted_rows(requests)
+    epochs = hosted_rows(epochs)
+    scope_exclusions = hosted_rows(scope_exclusions)
+    sources.append(
+        {
+            "source_kind": "scope_quarantine",
+            "source_id": "historical-partner-models",
+            "policy": "excluded_from_all_current_hosted_endpoint_estimands",
+            "endpoint_ids": sorted(HISTORICAL_PARTNER_ENDPOINT_IDS),
+            "quarantined_rows": quarantined_partner_rows,
+            "cost_policy": (
+                "historical campaign exposure remains in cumulative stage receipts"
+            ),
+            "cost_summary_required": False,
+            "cost_stage_included": False,
+        }
+    )
     # Each source/request identity is immutable. Duplicate rows are an input error,
     # not extra statistical evidence.
     request_keys = [(row["source_id"], row["request_id"]) for row in requests]

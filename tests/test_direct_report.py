@@ -14,6 +14,7 @@ from do_benchmark.direct_report import (
     DEEPSEEK_ENDPOINT_ID,
     EXPECTED_ENDPOINT_IDS,
     KIMI_UNDOCUMENTED_CONTEXT_PROBE_ANCHOR,
+    REQUIRED_COVERAGE_DIMENSIONS,
     DirectReportError,
     _breadth_cost_summary_required,
     _build_cost_summary,
@@ -1144,7 +1145,7 @@ def test_analysis_combines_breadth_and_aimd(tmp_path: Path) -> None:
         seed=7,
         bootstrap_replicates=50,
     )
-    assert len(analysis["endpoint_inventory"]) == 12
+    assert len(analysis["endpoint_inventory"]) == len(EXPECTED_ENDPOINT_IDS)
     assert [row["endpoint_id"] for row in analysis["endpoint_inventory"]] == list(
         EXPECTED_ENDPOINT_IDS
     )
@@ -1194,7 +1195,7 @@ def test_analysis_combines_breadth_and_aimd(tmp_path: Path) -> None:
             if row[point_key] is not None:
                 assert row[point_key] == pytest.approx(row[ci_key]["estimate"])
             assert row[ci_key]["sampling_unit"] == sampling_unit
-    assert len(analysis["endpoint_summaries"]) == 12
+    assert len(analysis["endpoint_summaries"]) == len(EXPECTED_ENDPOINT_IDS)
     assert analysis["request_reconciliation"]["matched_request_rows"] == 8
     assert analysis["request_reconciliation"]["orphan_request_rows"] == 1
     assert analysis["request_reconciliation"]["all_requests_reconciled"] is False
@@ -1332,7 +1333,7 @@ def test_missing_endpoint_rows_are_explicitly_untested(tmp_path: Path) -> None:
     )
     assert analysis["coverage_summary"]["status_counts"]["untested"] > 0
     rows = (output / "coverage-matrix.csv").read_text(encoding="utf-8")
-    assert "arcee-trinity-large-thinking" in rows
+    assert "arcee-trinity-large-thinking" not in rows
     assert "untested" in rows
     assert analysis["publication_status"] == "draft_incomplete_coverage"
     with pytest.raises(DirectReportError, match="100% completed"):
@@ -1356,10 +1357,16 @@ def test_missing_endpoint_rows_are_explicitly_untested(tmp_path: Path) -> None:
     spoofed = json.loads(json.dumps(analysis))
     spoofed["coverage_summary"].update(
         {
-            "completed_or_evidence_backed_unsupported_cells": 192,
+            "completed_or_evidence_backed_unsupported_cells": (
+                len(EXPECTED_ENDPOINT_IDS) * len(REQUIRED_COVERAGE_DIMENSIONS)
+            ),
             "coverage_fraction": 1.0,
             "is_100_percent": True,
-            "status_counts": {"completed": 192},
+            "status_counts": {
+                "completed": (
+                    len(EXPECTED_ENDPOINT_IDS) * len(REQUIRED_COVERAGE_DIMENSIONS)
+                )
+            },
         }
     )
     spoofed["workload_summaries"] = []

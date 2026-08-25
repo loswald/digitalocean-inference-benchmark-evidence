@@ -81,16 +81,18 @@ def test_overview_uses_narrow_evidence_labels_without_pooled_ceiling() -> None:
     )
 
 
-def test_pdf_story_uses_only_public_bundle_and_has_twelve_profiles(
+def test_pdf_story_uses_only_public_bundle_and_has_hosted_profiles(
     tmp_path: Path,
 ) -> None:
+    required_cells = len(EXPECTED_ENDPOINT_IDS) * len(REQUIRED_COVERAGE_DIMENSIONS)
+    completed_cells = required_cells // 2
     coverage_matrix = [
         {
             "endpoint_id": endpoint,
             "coverage_dimension": dimension,
-            "status": "completed" if index < 96 else "untested",
-            "planned_cell_or_epoch_count": 1 if index < 96 else 0,
-            "observed_attempt_count": 1 if index < 96 else 0,
+            "status": "completed" if index < completed_cells else "untested",
+            "planned_cell_or_epoch_count": 1 if index < completed_cells else 0,
+            "observed_attempt_count": 1 if index < completed_cells else 0,
             "explicit_untested_subtest_count": 0,
             "has_explicit_scope_exclusions": False,
         }
@@ -157,8 +159,10 @@ def test_pdf_story_uses_only_public_bundle_and_has_twelve_profiles(
         ],
         "cost_summary": {
             "schema_version": "digitalocean_public_cost_summary_v1",
-            "request_attributed_estimated_cost_usd": 2.4,
-            "cost_attributed_request_count": 240,
+            "request_attributed_estimated_cost_usd": (
+                len(EXPECTED_ENDPOINT_IDS) * 0.2
+            ),
+            "cost_attributed_request_count": len(EXPECTED_ENDPOINT_IDS) * 20,
             "cost_unattributed_request_count": 0,
             "request_cost_attribution_complete": True,
             "conservative_campaign_exposure_usd": 3.1,
@@ -197,15 +201,15 @@ def test_pdf_story_uses_only_public_bundle_and_has_twelve_profiles(
         "workload_summaries": [],
         "observed_limits": [],
         "coverage_summary": {
-            "required_endpoint_count": 12,
-            "required_dimension_count": 16,
-            "required_endpoint_dimension_cells": 192,
-            "completed_or_evidence_backed_unsupported_cells": 96,
-            "coverage_fraction": 96 / 192,
+            "required_endpoint_count": len(EXPECTED_ENDPOINT_IDS),
+            "required_dimension_count": len(REQUIRED_COVERAGE_DIMENSIONS),
+            "required_endpoint_dimension_cells": required_cells,
+            "completed_or_evidence_backed_unsupported_cells": completed_cells,
+            "coverage_fraction": completed_cells / required_cells,
             "is_100_percent": False,
             "status_counts": {
-                "completed": 96,
-                "untested": 96,
+                "completed": completed_cells,
+                "untested": required_cells - completed_cells,
             },
         },
         "coverage_matrix": coverage_matrix,
@@ -298,7 +302,7 @@ def test_pdf_story_uses_only_public_bundle_and_has_twelve_profiles(
     (tmp_path / "charts").mkdir()
     (tmp_path / "charts" / "stale-v1.png").write_bytes(b"not an image")
     inputs = load_public_inputs(tmp_path)
-    assert len(inputs.analysis["endpoint_inventory"]) == 12
+    assert len(inputs.analysis["endpoint_inventory"]) == len(EXPECTED_ENDPOINT_IDS)
     assert inputs.charts == ()
     story = build_story(tmp_path)
     text = _story_text(story)
@@ -355,10 +359,10 @@ def test_pdf_story_uses_only_public_bundle_and_has_twelve_profiles(
     analysis["scope_exclusions"] = []
     analysis["coverage_summary"].update(
         {
-            "completed_or_evidence_backed_unsupported_cells": 192,
+            "completed_or_evidence_backed_unsupported_cells": len(coverage_matrix),
             "coverage_fraction": 1.0,
             "is_100_percent": True,
-            "status_counts": {"completed": 192},
+            "status_counts": {"completed": len(coverage_matrix)},
         }
     )
     analysis["coverage_matrix"] = coverage_matrix

@@ -12,6 +12,8 @@ from do_benchmark.core import canonical_json, stable_hash
 from do_benchmark.direct_completion import attempt_request_id
 from do_benchmark.direct_report import (
     DirectReportError,
+    EXPECTED_ENDPOINT_IDS,
+    REQUIRED_COVERAGE_DIMENSIONS,
     _build_cost_summary,
     _source_cost_ledger_fields,
     analyze_and_write,
@@ -349,8 +351,9 @@ def test_completion_retries_remain_physical_but_final_is_only_coverage_attempt(
     assert row["observed_attempt_count"] == 1
     assert row["conclusive_attempt_count"] == 1
     assert row["status"] == "completed"
-    assert len(matrix) == 192
-    assert summary["required_endpoint_dimension_cells"] == 192
+    required_cells = len(EXPECTED_ENDPOINT_IDS) * len(REQUIRED_COVERAGE_DIMENSIONS)
+    assert len(matrix) == required_cells
+    assert summary["required_endpoint_dimension_cells"] == required_cells
 
     unresolved_plan = copy.deepcopy(loaded["plans"])
     unresolved_plan[0]["terminal_outcome_status"] = "unknown_prior_reservation"
@@ -630,7 +633,9 @@ def test_completion_directory_flows_through_public_pipeline_and_safety_scan(
     )
 
     assert analysis["contract_gate"]["passed"] is True
-    assert analysis["coverage_summary"]["required_endpoint_dimension_cells"] == 192
+    assert analysis["coverage_summary"]["required_endpoint_dimension_cells"] == (
+        len(EXPECTED_ENDPOINT_IDS) * len(REQUIRED_COVERAGE_DIMENSIONS)
+    )
     assert analysis["public_bundle_safety"]["scanner"].endswith("safety_scan_v1")
     assert [
         stage["summary_schema_version"]
