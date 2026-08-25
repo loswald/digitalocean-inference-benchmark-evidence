@@ -17,8 +17,9 @@ This note separates a late credential/account failure from model and endpoint re
 - The credential still returned HTTP 403 from `https://api.digitalocean.com/v2/account`.
   The control-plane API is a separate surface and is not treated as the inference-readiness
   gate.
-- The cumulative conservative campaign exposure after sealing the interrupted wave is
-  `$237.487594171`, below the owner-approved `$400` cap. No HTTP 402 latch occurred.
+- The cumulative conservative campaign exposure after the hosted-only recovery and closure
+  wave is `$240.825554971`, below the owner-approved `$400` cap. No HTTP 402 latch occurred
+  in those recovery/closure runs.
 
 No credential, prompt, model output, response body, or raw header is retained in this public note.
 
@@ -38,9 +39,9 @@ passthrough exposure and the most plausible reason promotional credits did not a
 The successful evidence collected before the incident remains valid for its measured window. It
 does not prove current availability.
 
-## Required recovery gate
+## Recovery gate and completion
 
-Before another load wave:
+The following gate was applied before the hosted-only closure wave:
 
 1. The Serverless Inference model-list endpoint succeeds.
 2. Two serial streamed exact-marker controls on DigitalOcean-hosted models succeed with positive
@@ -50,4 +51,8 @@ Before another load wave:
 4. Every selected model passes the hosted-only allowlist; Arcee and every other partner/passthrough
    model fail closed before a request is sent.
 
-Only after those gates pass may unresolved capability, output, soak, and context cells be closed.
+All four gates passed. The subsequent hosted-only campaign sent 521 provider attempts across
+177/177 terminal cells, plus 9 serial recovery/control attempts. It observed 378 HTTP 200, 105
+expected validation HTTP 400, and 30 HTTP 500 responses in the main closure wave, with no HTTP
+402 and no Arcee selection. Fifty-one cells became conclusive; unresolved cells remain labelled
+inconclusive rather than being converted into support or rejection claims.

@@ -555,8 +555,8 @@ def build_charts(bundle: Bundle, output: Path) -> list[Path]:
             label=status.title(),
         )
         left = [a + b for a, b in zip(left, values)]
-    ax.set_xlim(0, 12)
-    ax.set_xlabel("Endpoints (of 12)")
+    ax.set_xlim(0, len(REPORT_ENDPOINT_IDS))
+    ax.set_xlabel(f"DigitalOcean-hosted endpoints (of {len(REPORT_ENDPOINT_IDS)})")
     ax.set_title("Evidence status by required benchmark dimension", loc="left")
     ax.legend(frameon=False, ncol=3, loc="upper right")
     ax.spines[["top", "right", "left"]].set_visible(False)
@@ -1318,7 +1318,7 @@ def _method_pages(
         ),
         Spacer(1, 5 * mm),
         _p(
-            "The two cost figures overlap and must not be added. Request-attributed cost uses reported token usage. Conservative exposure retains worst-case reservations for failed, timed-out, or usage-incomplete requests and is the budget guard.",
+            "The two cost figures overlap and must not be added. Request-attributed cost uses reported token usage and includes the quarantined $9.486 historical partner-model estimate. Conservative exposure retains worst-case reservations for failed, timed-out, or usage-incomplete requests and is the budget guard.",
             styles["body"],
         ),
         _p("Reproduce a provider run", styles["h2"]),

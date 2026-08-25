@@ -1,7 +1,7 @@
 # DigitalOcean Inference Endpoint Benchmark
 
 An independent, request-level benchmark of 11 DigitalOcean-hosted Serverless
-Inference endpoints, measured on 23–24 August 2026. The study covers low-load
+Inference endpoints, measured on 23–25 August 2026. The study covers low-load
 latency, open-loop AIMD capacity probes, two-minute offered-load soaks, short
 and long inputs, short and long outputs, mixed workloads, recovery, tools,
 structured output, vision, parameter behavior, context acceptance/retrieval,
@@ -12,9 +12,9 @@ This repository is not affiliated with or endorsed by DigitalOcean.
 ## Bottom line
 
 **This is useful evidence, but it is not a complete certification of the
-portfolio.** The hosted-only publication matrix resolves 95 of 176 planned
-endpoint-by-dimension cells (54.0%): 88 completed, 7 evidence-backed
-unsupported, and 81 inconclusive. Every unresolved cell remains visible.
+portfolio.** The hosted-only publication matrix resolves 107 of 176 planned
+endpoint-by-dimension cells (60.8%): 100 completed, 7 evidence-backed
+unsupported, and 69 inconclusive. Every unresolved cell remains visible.
 
 **Current inference access: restored after prepayment.** On 24 August, the
 authorized inference credential began returning HTTP 403 as the Serverless
@@ -78,12 +78,20 @@ a passing operating point.
   acceptance-plus-recovery rule.
 - **1,260 capability cells**, with 1,248 provider attempts.
 - **180 fixed context probes plus adaptive refinements** across all endpoints.
-- **304 completion/closure probes**, of which 61 were conclusive under the
-  strict analysis contract.
+- **304 original completion/closure probes**, of which 61 were conclusive under
+  the strict analysis contract.
 - **52 additional matched-closure physical attempts** during the access
   incident: 32 HTTP 403, 4 HTTP 500, and 16 HTTP 503. Twelve semantic cells
   reached a terminal inconclusive state; none became a support/rejection claim.
-- **$237.4876 conservative cumulative exposure** under a $400 campaign cap.
+- **530 additional DO-hosted recovery/closure attempts** on 25 August: 177/177
+  hosted-only cells reached a terminal state, with 51 conclusive cells, 378
+  HTTP 200 responses, 105 expected validation HTTP 400 responses, 30 HTTP 500
+  responses, and no HTTP 402. Arcee was not selected or sent.
+- **42,177 source request/attempt rows ingested**, including 41,595 normalized
+  workload rows used by the matched performance tables. Of those normalized
+  rows, 38,385 are from the 11 hosted endpoints and 3,210 are the quarantined
+  historical Arcee rows.
+- **$240.8256 conservative cumulative exposure** under a $400 campaign cap.
   This is an experiment ledger, not a DigitalOcean invoice or proof of credit
   application.
 
@@ -100,6 +108,7 @@ a passing operating point.
 - [Capability table](results/capability-evidence.csv)
 - [Context-envelope table](results/observed-limits.csv)
 - [Time and cost ledger](results/cost-summary.json)
+- [Endpoint count and token-cost summary](results/endpoint-summary.csv)
 
 The PDF is deliberately labelled as an incomplete-evidence report. A report
 that issued many requests is not automatically a complete benchmark.

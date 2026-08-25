@@ -3,10 +3,13 @@
 ## Source identity
 
 The evidence was produced by operator-run measurements of DigitalOcean
-Serverless Inference, with the final direct campaign executed on 23–24 August
-2026. Requests used the public `https://inference.do-ai.run/v1` namespace and
-exact identifiers returned by the live `/v1/models` catalog with
-`owned_by=digitalocean`.
+Serverless Inference, with direct campaigns executed on 23–25 August 2026.
+Requests used the public `https://inference.do-ai.run/v1` namespace and exact
+identifiers returned by the live `/v1/models` catalog. The current production
+scope is the 11 identifiers in DigitalOcean's documented hosted-model table.
+One historical identifier, `arcee-trinity-large-thinking`, is a partner model;
+its rows are retained only for reconciliation and excluded from production
+comparisons and recommendations.
 
 No customer data was used. Prompts were programmatic or synthetic. The public
 bundle contains sanitized request-level timing, status, usage, cost, scoring,
@@ -23,14 +26,20 @@ raw headers.
 | Context envelope | 2026-08-23 21:53–22:08 | Execution complete, science incomplete |
 | Fresh endpoint-isolated AIMD | 2026-08-24 04:36–06:48 | Complete, right-censored |
 | Targeted completion | 2026-08-24 06:58–10:31 | Incomplete or censored |
+| Interrupted matched closure | 2026-08-24 23:16–23:19 | Sealed inconclusive; no replay |
+| Hosted recovery controls | 2026-08-25 00:12–00:24 | Complete; access restored |
+| Hosted-only closure | 2026-08-25 00:25–00:53 | 177/177 terminal; 51 conclusive |
 
-The final conservative exposure was `$237.358277971` under a `$400` cap. One
+The final conservative exposure was `$240.825554971` under a `$400` cap. One
 historical context stage latched HTTP 402; later stages preserve that fact but
-do not attribute it to model quality. The public analysis contains 41,595
-request rows and 1,453 epoch rows.
+do not attribute it to model quality. The public analysis ingests 42,177 source
+request/attempt rows, of which 41,595 normalized workload rows support matched
+performance tables, plus 1,453 epoch rows.
 
-The strict evidence matrix is 192 cells. It resolves 105 cells and leaves 87
-inconclusive, so the publication status is `draft_incomplete_coverage`.
+The immutable historical evidence matrix is 192 cells. It resolves 117 cells
+and leaves 75 inconclusive. The hosted-only production view is 176 cells: 100
+completed, 7 unsupported, and 69 inconclusive. Publication status remains
+`draft_incomplete_coverage`.
 
 ## Transformation lineage
 

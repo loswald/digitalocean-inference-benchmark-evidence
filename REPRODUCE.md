@@ -66,7 +66,7 @@ python scripts/build-direct-public-report-pdf.py \
   --output build/DigitalOcean-Inference-Endpoint-Benchmark-August-2026.pdf \
   --mode draft \
   --title "DigitalOcean Inference Endpoint Technical Benchmark" \
-  --subtitle "Incomplete evidence report — 23–24 August 2026"
+  --subtitle "Incomplete evidence report — 23–25 August 2026"
 ```
 
 The decompressed `results/analysis.json` hash is recorded in

@@ -1,7 +1,7 @@
 # Methods
 
 This benchmark describes what a client observed from DigitalOcean Serverless
-Inference during bounded experiments on 23–24 August 2026. It does not rank the
+Inference during bounded experiments on 23–25 August 2026. It does not rank the
 underlying models in general, certify production readiness, or isolate model
 behavior from hosting behavior. The exact API, model identifier, request shape,
 load, and measurement window are part of every result.
@@ -17,7 +17,7 @@ The campaign used exact model identifiers returned by DigitalOcean's live
 `https://inference.do-ai.run/v1`. Standalone direct runners measured breadth,
 endpoint-isolated AIMD, two-minute soaks, capability behavior, context
 acceptance/retrieval, and targeted completion cells. The final measurement
-window ended on 24 August 2026.
+window ended on 25 August 2026.
 
 The production scope is now the 11 identifiers in DigitalOcean's documented
 "DigitalOcean-Hosted Models" table. `arcee-trinity-large-thinking` was
@@ -29,8 +29,8 @@ runners now reject any identifier outside the hosted-only allowlist before
 network access.
 
 The direct campaigns shared a $400 cumulative exposure cap. The final
-conservative ledger was $237.487594171 after sealing the interrupted access
-incident. Endpoint-isolated capacity work never
+conservative ledger was $240.825554971 after the hosted-only recovery and
+closure campaign. Endpoint-isolated capacity work never
 overlapped another provider workload. The context runner used one sequential
 chain per endpoint and ran those chains concurrently behind an account-wide
 RPM/TPM governor; those context timings are diagnostic only and are not reported
@@ -40,10 +40,10 @@ inconclusive cells remain visible.
 
 The hosted-only evidence matrix is `11 endpoints × 16 dimensions = 176 cells`.
 A cell is resolved only when its dimension-specific evidence rule passes or an
-exact, evidence-backed unsupported result exists. The final matrix contains 97
-completed cells, 8 unsupported cells, and 87 inconclusive cells before the
-partner-model exclusion; the hosted-only view contains 88 completed, 7
-unsupported, and 81 inconclusive cells. Therefore this
+exact, evidence-backed unsupported result exists. The final immutable 12-model
+matrix contains 109 completed cells, 8 unsupported cells, and 75 inconclusive
+cells before the partner-model exclusion; the hosted-only production view
+contains 100 completed, 7 unsupported, and 69 inconclusive cells. Therefore this
 repository is an incomplete-evidence report, not a complete endpoint
 certification.
 

@@ -1,9 +1,9 @@
 {
   "billing_credit_http_402_latched": true,
-  "conservative_campaign_exposure_usd": 237.35827797099992,
-  "conservative_exposure_receipt_schema_version": "do_direct_completion_summary_v1",
-  "conservative_exposure_receipt_sha256": "a04d7d9e526ee61fdb71c74717940a1644dd84943fc68aa3354b50de42adfa01",
-  "conservative_exposure_source_id": "do-sixhour-completion-20260824-r1",
+  "conservative_campaign_exposure_usd": 240.825554971,
+  "conservative_exposure_receipt_schema_version": "do_matched_closure_summary_v1",
+  "conservative_exposure_receipt_sha256": "1ed72c03b872a21e272046c9f406bd0dd11b1e4f45c39a619ff7b1387cfba250",
+  "conservative_exposure_source_id": "do-hosted-closure-20260825-r1",
   "cost_attributed_request_count": 41595,
   "cost_cap_history_usd": [
     200.0,
@@ -19,7 +19,7 @@
   ],
   "initial_carried_conservative_exposure_usd": 52.892208102609274,
   "interpretation": "Request-attributed estimated cost sums normalized request usage. Conservative campaign exposure is the authoritative cumulative guard and retains reservations for incomplete, error, and unknown outcomes; the two values overlap, are not additive, and are not interchangeable. Each stage is checked against the cap in force for that stage; any owner-authorized cap increase is preserved explicitly in the ledger.",
-  "request_attributed_estimated_cost_usd": 189.142747956,
+  "request_attributed_estimated_cost_usd": 189.1427479560131,
   "request_cost_attribution_complete": true,
   "schema_version": "digitalocean_public_cost_summary_v1",
   "source_stages": [
@@ -118,6 +118,66 @@
       "summary_schema_version": "do_direct_completion_summary_v1",
       "summary_sha256": "a04d7d9e526ee61fdb71c74717940a1644dd84943fc68aa3354b50de42adfa01",
       "terminal_status": "incomplete_or_censored"
+    },
+    {
+      "cost_basis": "source_terminal_summary",
+      "cost_cap_usd": 400.0,
+      "cumulative_conservative_exposure_usd": 237.487594171,
+      "ended_at": "2026-08-24T23:12:16.209081+00:00",
+      "http_402_latched": false,
+      "incremental_conservative_exposure_usd": 0.1293162000000052,
+      "prior_conservative_exposure_usd": 237.358277971,
+      "source_id": "do-matched-closure-20260824-r1",
+      "source_kind": "direct_completion",
+      "started_at": "2026-08-24T22:32:25.372082+00:00",
+      "summary_schema_version": "do_matched_closure_summary_v1",
+      "summary_sha256": "04d34fbd60c9846466fa00b3cf2c42aabc85e4880bd706d8c32a4711b0fa17f2",
+      "terminal_status": "incomplete_or_censored"
+    },
+    {
+      "cost_basis": "source_terminal_summary",
+      "cost_cap_usd": 400.0,
+      "cumulative_conservative_exposure_usd": 237.48895700300002,
+      "ended_at": "2026-08-25T00:22:17.104037+00:00",
+      "http_402_latched": false,
+      "incremental_conservative_exposure_usd": 0.001362832000012304,
+      "prior_conservative_exposure_usd": 237.487594171,
+      "source_id": "do-hosted-recovery-20260825-r1",
+      "source_kind": "direct_completion",
+      "started_at": "2026-08-25T00:21:07.014706+00:00",
+      "summary_schema_version": "do_matched_closure_summary_v1",
+      "summary_sha256": "cb1bf4c519c07838f6e025f7eb341e6931a78170a4b36a0288456239ac175a0a",
+      "terminal_status": "complete"
+    },
+    {
+      "cost_basis": "source_terminal_summary",
+      "cost_cap_usd": 400.0,
+      "cumulative_conservative_exposure_usd": 237.490405915,
+      "ended_at": "2026-08-25T00:24:45.749792+00:00",
+      "http_402_latched": false,
+      "incremental_conservative_exposure_usd": 0.001448912000000746,
+      "prior_conservative_exposure_usd": 237.488957003,
+      "source_id": "do-hosted-control-20260825-r1",
+      "source_kind": "direct_completion",
+      "started_at": "2026-08-25T00:23:35.011636+00:00",
+      "summary_schema_version": "do_matched_closure_summary_v1",
+      "summary_sha256": "08b46cdd10745c6f959aa92fb5bfe7be8fb52f1f6f58b05ff29c91c21f31f2e8",
+      "terminal_status": "complete"
+    },
+    {
+      "cost_basis": "source_terminal_summary",
+      "cost_cap_usd": 400.0,
+      "cumulative_conservative_exposure_usd": 240.825554971,
+      "ended_at": "2026-08-25T00:53:06.677298+00:00",
+      "http_402_latched": false,
+      "incremental_conservative_exposure_usd": 3.335149056000006,
+      "prior_conservative_exposure_usd": 237.490405915,
+      "source_id": "do-hosted-closure-20260825-r1",
+      "source_kind": "direct_completion",
+      "started_at": "2026-08-25T00:25:31.644547+00:00",
+      "summary_schema_version": "do_matched_closure_summary_v1",
+      "summary_sha256": "1ed72c03b872a21e272046c9f406bd0dd11b1e4f45c39a619ff7b1387cfba250",
+      "terminal_status": "complete"
     }
   ]
 }
