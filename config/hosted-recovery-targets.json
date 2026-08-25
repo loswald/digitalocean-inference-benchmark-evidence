@@ -1,0 +1,7 @@
+{
+  "capability_targets": [],
+  "schema_version": "do_closure_targets_v1",
+  "source_coverage_sha256": "0d0cb8659af0cfd0d8e079e801053fbd90ef5d44f7fd617a196d20157823190f",
+  "source_requests_sha256": "a3298affa3fb24f74f589c77030114ddf718e36274d509939bd79a025f25193a",
+  "unresolved_endpoint_dimensions": []
+}

@@ -3633,7 +3633,7 @@ class DirectSoakCampaign:
             )
         if not self.preflight["passes"]:
             raise SoakPreflightError(
-                "soak preflight failed: all 12x4 cells need valid AIMD candidates and "
+                "soak preflight failed: all hosted endpoint x 4-shape cells need valid AIMD candidates and "
                 "current exposure plus the largest in-flight reservation batch must fit "
                 "the cumulative cap"
             )

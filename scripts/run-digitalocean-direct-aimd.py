@@ -41,7 +41,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--model",
         action="append",
         dest="models",
-        help="exact DigitalOcean model ID; repeat; default is all 12 frozen MODEL_SPECS",
+        help="exact hosted model ID; repeat; default is the 11-model DO-hosted allowlist",
     )
     parser.add_argument("--seed", type=int, default=20260823)
     parser.add_argument("--epoch-seconds", type=float, default=5.0)

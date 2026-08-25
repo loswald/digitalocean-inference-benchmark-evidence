@@ -58,7 +58,7 @@ def _existing_campaign_deadline(output_dir: Path) -> datetime | None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Probe all 12 DigitalOcean context envelopes with a direct runner. "
+            "Probe all 11 DigitalOcean-hosted context envelopes with a direct runner. "
             "Each model has one sequential adaptive chain; model chains overlap "
             "behind a shared per-account RPM/TPM governor and global ceiling. The "
             "fixed design uses 1/10/25/50/75/90/95/99% "
@@ -71,7 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--model",
         action="append",
         dest="models",
-        help="exact DigitalOcean model ID; repeat; default is all 12 frozen endpoints",
+        help="exact hosted model ID; repeat; default is the 11-model DO-hosted allowlist",
     )
     parser.add_argument("--seed", type=int, default=20260823)
     parser.add_argument(
