@@ -5944,6 +5944,7 @@ def validate_public_analysis_contract(
             "do_direct_context_summary_v3": {
                 "execution_complete_scientifically_incomplete",
                 "complete",
+                "scientifically_complete",
             },
             "do_direct_completion_summary_v1": {
                 "complete",
@@ -7413,7 +7414,38 @@ def reconcile_request_rows(
             }
             strict_identity = advertised_hashes.get("request_identity_sha256")
             matching_legacy_hashes = 0
+            completion_semantic_payload = None
+            if source_kind == "direct_completion":
+                # A matched-closure plan hashes the semantic probe payload, while
+                # each physical control/probe attempt has a phase-specific nonce.
+                # The normalized attempt preserves the semantic hash as
+                # rendered_payload_sha256 and the physical bytes separately as
+                # request_payload_sha256. Comparing the latter to the plan would
+                # incorrectly orphan every valid control bracket.
+                completion_semantic_payload = advertised_hashes.pop(
+                    "request_payload_sha256", None
+                )
+                if completion_semantic_payload is not None:
+                    observed_semantic_payload = _text(
+                        row.get("rendered_payload_sha256")
+                    )
+                    if observed_semantic_payload is None:
+                        # Direct-completion retry journals written before the
+                        # matched-control schema use request_payload_sha256 for
+                        # both the semantic and physical payload. Preserve that
+                        # exact legacy comparison when no rendered hash exists.
+                        advertised_hashes["request_payload_sha256"] = (
+                            completion_semantic_payload
+                        )
+                        completion_semantic_payload = None
+                    elif observed_semantic_payload != completion_semantic_payload:
+                        reason = "rendered_payload_sha256_mismatch"
+                        parent = None
+                    else:
+                        matching_legacy_hashes += 1
             for field, expected in advertised_hashes.items():
+                if parent is None:
+                    break
                 observed = _text(row.get(field))
                 if strict_identity is not None and observed is None:
                     reason = f"missing_{field}"
@@ -7427,7 +7459,9 @@ def reconcile_request_rows(
                     matching_legacy_hashes += 1
             if parent is not None:
                 row["reconciliation_policy"] = (
-                    "strict_plan_contract_hashes"
+                    "strict_semantic_plan_contract_hashes"
+                    if completion_semantic_payload is not None
+                    else "strict_plan_contract_hashes"
                     if strict_identity is not None
                     else (
                         "legacy_id_endpoint_with_matching_available_hashes"

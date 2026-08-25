@@ -2217,6 +2217,43 @@ def test_legacy_reconciliation_is_explicitly_labeled() -> None:
     assert matched[0]["reconciliation_policy"] == "legacy_id_endpoint_only"
 
 
+def test_completion_reconciliation_uses_semantic_not_physical_payload_hash() -> None:
+    plan = {
+        "source_kind": "direct_completion",
+        "source_id": "closure",
+        "cell_id": "cell",
+        "endpoint_id": DEEPSEEK_ENDPOINT_ID,
+        "workload": "tool_calling",
+        "coverage_tags": ["tool_calling"],
+        "request_payload_sha256": "a" * 64,
+        "campaign_plan_sha256": "b" * 64,
+    }
+    request = {
+        "source_kind": "direct_completion",
+        "source_id": "closure",
+        "cell_id": "cell",
+        "endpoint_id": DEEPSEEK_ENDPOINT_ID,
+        "workload": "tool_calling",
+        "workload_provenance": "request_declared",
+        "coverage_tags": ["tool_calling"],
+        "phase": "control_before",
+        "rendered_payload_sha256": "a" * 64,
+        "request_payload_sha256": "c" * 64,
+        "campaign_plan_sha256": "b" * 64,
+    }
+    matched, orphaned = reconcile_request_rows([plan], [request], [])
+    assert not orphaned
+    assert matched[0]["reconciliation_policy"] == (
+        "strict_semantic_plan_contract_hashes"
+    )
+
+    bad = dict(request)
+    bad["rendered_payload_sha256"] = "d" * 64
+    matched, orphaned = reconcile_request_rows([plan], [bad], [])
+    assert not matched
+    assert orphaned[0]["orphan_reason"] == "rendered_payload_sha256_mismatch"
+
+
 def test_epoch_units_do_not_collapse_identical_ids_across_sources() -> None:
     common = {
         "schema_version": "digitalocean_public_epoch_v1",
