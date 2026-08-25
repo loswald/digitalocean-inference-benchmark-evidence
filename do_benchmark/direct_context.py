@@ -359,6 +359,11 @@ class ContextConfig:
                 ),
                 "minimum_congestion_factor": (self.governor_minimum_congestion_factor),
                 "successes_per_increase": self.governor_successes_per_increase,
+                "http_429_scope_policy": (
+                    "account_wide_aimd_only_when_request_or_tpm_exhaustion_is_"
+                    "reported_or_quota_evidence_is_absent; full_request_and_tpm_"
+                    "remaining_signals_classify_the_429_as_endpoint_pressure"
+                ),
                 "inference_limits_doc_url": INFERENCE_LIMITS_DOC_URL,
                 "inference_limits_doc_verified_date": (
                     INFERENCE_LIMITS_DOC_VERIFIED_DATE
@@ -990,6 +995,7 @@ class AccountQuotaGovernor:
         self._admissions = 0
         self._observations = 0
         self._http_429_observations = 0
+        self._endpoint_pressure_429_observations = 0
 
     @property
     def bootstrap_ready(self) -> bool:
@@ -1125,13 +1131,49 @@ class AccountQuotaGovernor:
             ]
             if http_status == 429:
                 self._http_429_observations += 1
+                request_remaining = signals["rate_limit_remaining_requests"]
+                minute_tokens_remaining = signals[
+                    "rate_limit_remaining_tokens_per_minute"
+                ]
+                daily_tokens_remaining = signals["rate_limit_remaining_tokens_per_day"]
+                retry_seconds = signals["retry_after_seconds"]
+                future_reset_reported = any(
+                    value is not None and value > now_epoch for value in reset_values
+                )
+                explicit_endpoint_pressure = bool(
+                    request_remaining is not None
+                    and request_remaining > 0
+                    and minute_tokens_remaining is not None
+                    and minute_tokens_remaining > 0
+                    and (
+                        daily_tokens_remaining is None or daily_tokens_remaining > 0
+                    )
+                    and not future_reset_reported
+                    and not (retry_seconds is not None and retry_seconds > 0)
+                )
+                signals["account_quota_congestion_evidence"] = (
+                    not explicit_endpoint_pressure
+                )
+                signals["http_429_scope_classification"] = (
+                    "endpoint_pressure_with_account_quota_remaining"
+                    if explicit_endpoint_pressure
+                    else "account_quota_or_ambiguous_congestion"
+                )
+                if explicit_endpoint_pressure:
+                    # Model- or endpoint-local pressure must remain visible as
+                    # a failed probe, but it cannot justify throttling unrelated
+                    # endpoints when the provider simultaneously reports full
+                    # account RPM and TPM availability.
+                    self._endpoint_pressure_429_observations += 1
+                    self._latest_signals = dict(signals)
+                    return dict(signals)
+
                 self._healthy_since_increase = 0
                 self._congestion_factor = max(
                     self.config.governor_minimum_congestion_factor,
                     self._congestion_factor
                     * self.config.governor_multiplicative_decrease,
                 )
-                retry_seconds = signals["retry_after_seconds"]
                 reduced_request_rate, _ = self._rates()
                 # A 429 without usable Retry-After/reset metadata must still
                 # impose a global cooldown. One request interval at the newly
@@ -1224,6 +1266,9 @@ class AccountQuotaGovernor:
             "admissions": self._admissions,
             "observations": self._observations,
             "http_429_observations": self._http_429_observations,
+            "endpoint_pressure_429_observations": (
+                self._endpoint_pressure_429_observations
+            ),
             "latest_numeric_signals": dict(self._latest_signals),
             "restart_policy": "cold_conservative_governor_no_request_replay",
         }

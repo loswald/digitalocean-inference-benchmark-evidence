@@ -800,6 +800,55 @@ def test_headerless_429_enforces_global_reduced_rate_cooldown() -> None:
     assert admission["congestion_factor"] == 0.5
 
 
+def test_429_with_full_account_quota_is_endpoint_pressure_not_global_congestion() -> None:
+    config = _config(
+        Path("unused-endpoint-pressure-429"),
+        fallback_account_rpm=120.0,
+        fallback_account_tpm=500_000.0,
+        quota_utilization_fraction=0.8,
+    )
+    clock = _FakeClock()
+    governor = AccountQuotaGovernor(
+        config,
+        monotonic=clock.monotonic,
+        epoch_time=clock.epoch,
+        sleeper=clock.sleep,
+    )
+
+    async def scenario() -> tuple[dict[str, object], dict[str, object]]:
+        signals = await governor.observe(
+            headers={
+                "x-ratelimit-limit-requests": "4500",
+                "x-ratelimit-remaining-requests": "4499",
+                "x-ratelimit-reset-requests": "0",
+                "x-ratelimit-limit-tokens-per-minute": "3500000",
+                "x-ratelimit-remaining-tokens-per-minute": "3500000",
+                "x-ratelimit-reset-tokens-per-minute": "0",
+                "x-ratelimit-limit-tokens-per-day": "10000000000",
+                "x-ratelimit-remaining-tokens-per-day": "1000000000",
+                "x-ratelimit-reset-tokens-per-day": "0",
+            },
+            http_status=429,
+        )
+        admission = await governor.acquire(
+            estimated_tokens=1,
+            stop_launch_at=datetime.fromtimestamp(2_000, timezone.utc),
+        )
+        assert admission is not None
+        return signals, admission
+
+    signals, admission = asyncio.run(scenario())
+    assert signals["account_quota_congestion_evidence"] is False
+    assert signals["http_429_scope_classification"] == (
+        "endpoint_pressure_with_account_quota_remaining"
+    )
+    assert admission["congestion_factor"] == 1.0
+    assert clock.sleeps == []
+    snapshot = governor.snapshot()
+    assert snapshot["http_429_observations"] == 1
+    assert snapshot["endpoint_pressure_429_observations"] == 1
+
+
 @pytest.mark.parametrize(
     "field",
     (

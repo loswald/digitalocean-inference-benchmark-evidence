@@ -41,7 +41,8 @@ def main() -> int:
         default="draft",
         help=(
             "draft permits incomplete coverage and labels it; final fails unless "
-            "the frozen 192-cell matrix is complete and all evidence reconciles"
+            "the frozen hosted endpoint-by-dimension matrix is complete and all "
+            "evidence reconciles"
         ),
     )
     args = parser.parse_args()

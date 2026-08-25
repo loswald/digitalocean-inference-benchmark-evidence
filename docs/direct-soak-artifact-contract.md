@@ -10,8 +10,9 @@ explicitly exploratory input. That input is never labelled AIMD-confirmed; only
 a completed two-minute soak can confirm its tested operating point. The plan
 retains the evidence level, target rate, and realized source schedule rates.
 
-The default target is the frozen 12-endpoint inventory crossed with these four
-workload shapes:
+The default target is the frozen 11-endpoint DigitalOcean-hosted inventory
+crossed with these four workload shapes. Partner-routed catalog entries are not
+eligible for this campaign:
 
 | `shape` | Input | Output | Deterministic task mix |
 | --- | --- | --- | --- |
