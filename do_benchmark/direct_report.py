@@ -7896,6 +7896,7 @@ def analyze_and_write(
     soak_directories: Sequence[Path] = (),
     completion_directories: Sequence[Path] = (),
     closure_directories: Sequence[Path] = (),
+    cost_only_directories: Sequence[Path] = (),
     endpoint_freeze: Path,
     output_directory: Path,
     seed: int = 20260823,
@@ -8105,6 +8106,44 @@ def analyze_and_write(
             continue
         loaded = load_soak_directory(path)
         append_soak_evidence(loaded, cost_path=Path(path))
+    evidence_directories = {
+        Path(path).resolve()
+        for path in (
+            *breadth_directories,
+            *aimd_directories,
+            *soak_directories,
+            *completion_directories,
+            *closure_directories,
+        )
+    }
+    for path in cost_only_directories:
+        resolved = Path(path).resolve()
+        if resolved in evidence_directories:
+            raise DirectReportError(
+                "a cost-only directory cannot also contribute scientific evidence"
+            )
+        source_id = Path(path).name
+        if any(str(source.get("source_id")) == source_id for source in sources):
+            raise DirectReportError("duplicate cost-only source_id")
+        sources.append(
+            {
+                "source_kind": "direct_soak",
+                "source_id": source_id,
+                "request_rows": 0,
+                "epoch_rows": 0,
+                "scientific_evidence_included": False,
+                "cost_summary_required": True,
+                "cost_stage_policy": (
+                    "cost_receipt_only_scientific_rows_excluded_due_invalid_"
+                    "quality_pair_payload_hashes"
+                ),
+                **_source_cost_ledger_fields(
+                    Path(path),
+                    expected_source_kind="direct_soak",
+                    required=True,
+                ),
+            }
+        )
     partner_requests = [
         row
         for row in requests

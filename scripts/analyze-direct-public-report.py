@@ -28,6 +28,16 @@ def main() -> int:
     parser.add_argument("--completion-dir", type=Path, action="append", default=[])
     parser.add_argument("--closure-dir", type=Path, action="append", default=[])
     parser.add_argument(
+        "--cost-only-dir",
+        type=Path,
+        action="append",
+        default=[],
+        help=(
+            "terminal campaign directory retained only in the cumulative cost "
+            "chain; its scientific rows are deliberately excluded"
+        ),
+    )
+    parser.add_argument(
         "--endpoint-freeze",
         type=Path,
         default=REPO_ROOT / "config" / "endpoint-freeze.json",
@@ -60,6 +70,7 @@ def main() -> int:
         soak_directories=args.soak_dir,
         completion_directories=args.completion_dir,
         closure_directories=args.closure_dir,
+        cost_only_directories=args.cost_only_dir,
         endpoint_freeze=args.endpoint_freeze,
         output_directory=args.output_dir,
         seed=args.seed,
